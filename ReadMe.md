@@ -1,3 +1,22 @@
+# Team: Velociraptors
+
+## Project Design Document Details:
+
+### The project design document should include:
+#### Project Goal: 
+  - Implement a database of Congressional data scraped from Congress.gov and use Pandas and related tools to analyze patterns in Congressional behavior, with a focus on the House of Representatives and the bills they have introduced. 
+#### Project Summary: 
+  - We will create a platform to collect and analyze data that is available, but not very accessible, on congress.gov. The result will be both a macro- and micro-view of patterns found in the voting behaviors of Members of Congress and the introduction and passage of bills tailored to inform the average citizen. This project has importance because it does not take long on Congress.gov to realize that the information contained within its walls is not presented in a particularly accessible way. With some effort on our part, we will create a relational database with key information that allows us to form queries to quickly answer fundamental questions about both the high level trends of Congress as well as the behaviors of specific individuals. We plan on doing our web-scraping with python and selenium, cleaning our data with Pandas, building our database with in-line postgres in python scripts, and then analyzing and visualizing our data with Pandas and Matplotlib. 
+#### Tasks: 
+ - [Team task list](https://docs.google.com/spreadsheets/d/1QObT8fqyAEK_mUIfV7W_wEgpHoT284bxjVWZ7x1WCU8/edit#gid=0)
+#### Team Roles: 
+- Each person on the team will assume a management role to ensure that we deliver our project on time, but we will work collaboratively on all aspects of the project to ensure uniformity in gained experience. 
+  - Team Coordinator: Aidan
+  - DB Manager: Will
+  - Presentation Manager: Julie
+  - Visualization Manager: Danielle
+
+
 # Getting PostgreSQL Running With Google Cloud
 
 ## Deploying a VM
