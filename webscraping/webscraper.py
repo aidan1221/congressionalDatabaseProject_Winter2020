@@ -21,4 +21,7 @@ class Webscraper:
 
         WebDriverWait(self.DRIVER, duration).until(load_condition)
 
+    def open(self, url):
+        self.DRIVER.get(url)
+
     # def click_element_by_css(self, css_selector):
