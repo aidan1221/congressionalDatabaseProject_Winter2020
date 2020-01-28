@@ -3,14 +3,14 @@
 ## Project Design Document Details:
 
 ### The project design document should include:
-#### Project Goal: 
-  - Implement a database of Congressional data scraped from Congress.gov and use Pandas and related tools to analyze patterns in Congressional behavior, with a focus on the House of Representatives and the bills they have introduced. 
-#### Project Summary: 
-  - We will create a platform to collect and analyze data that is available, but not very accessible, on congress.gov. The result will be both a macro- and micro-view of patterns found in the voting behaviors of Members of Congress and the introduction and passage of bills tailored to inform the average citizen. This project has importance because it does not take long on Congress.gov to realize that the information contained within its walls is not presented in a particularly accessible way. With some effort on our part, we will create a relational database with key information that allows us to form queries to quickly answer fundamental questions about both the high level trends of Congress as well as the behaviors of specific individuals. We plan on doing our web-scraping with python and selenium, cleaning our data with Pandas, building our database with in-line postgres in python scripts, and then analyzing and visualizing our data with Pandas and Matplotlib. 
-#### Tasks: 
+#### Project Goal:
+  - Implement a database of Congressional data scraped from Congress.gov and use Pandas and related tools to analyze patterns in Congressional behavior, with a focus on the House of Representatives and the bills they have introduced.
+#### Project Summary:
+  - We will create a platform to collect and analyze data that is available, but not very accessible, on congress.gov. The result will be both a macro- and micro-view of patterns found in the voting behaviors of Members of Congress and the introduction and passage of bills tailored to inform the average citizen. This project has importance because it does not take long on Congress.gov to realize that the information contained within its walls is not presented in a particularly accessible way. With some effort on our part, we will create a relational database with key information that allows us to form queries to quickly answer fundamental questions about both the high level trends of Congress as well as the behaviors of specific individuals. We plan on doing our web-scraping with python and selenium, cleaning our data with Pandas, building our database with in-line postgres in python scripts, and then analyzing and visualizing our data with Pandas and Matplotlib.
+#### Tasks:
  - [Team task list](https://docs.google.com/spreadsheets/d/1QObT8fqyAEK_mUIfV7W_wEgpHoT284bxjVWZ7x1WCU8/edit#gid=0)
-#### Team Roles: 
-- Each person on the team will assume a management role to ensure that we deliver our project on time, but we will work collaboratively on all aspects of the project to ensure uniformity in gained experience. 
+#### Team Roles:
+- Each person on the team will assume a management role to ensure that we deliver our project on time, but we will work collaboratively on all aspects of the project to ensure uniformity in gained experience.
   - Team Coordinator: Aidan
   - DB Manager: Will
   - Presentation Manager: Julie
@@ -86,7 +86,7 @@ Run PSQL as the default user (which is conveniently called postgres):
 You should see the default PSQL command prompt, postgres=#
 Set a password using the command
 ```
-  \\password postgres
+  \password postgres
 ```
 
 Then confirm the password.
@@ -102,12 +102,11 @@ Enable remote connections by editing the pg_hba.conf file.  Access this with
   sudo vim ../../etc/postgresql/10/main/pg_hba.conf
 ```
 
-Determine the IP address of your local computer.  At the bottom of the file,
-add the following lines, replacing [YOUR_IPV4_ADDRESS] with your actual IPv4
-address:
+We can make PostgreSQL accept requests from all IPs. Find the #IPv4 remote
+connections entry in the pg_hba.conf file and add the following host line:
 ```
 #IPv4 remote connections:
-host    all             all           [YOUR_IPV4_ADDRESS]/32         md5
+host    all             all           0.0.0.0/0         password
 ```
 
 Save and exit vim, then open postgresql.conf with:
@@ -138,7 +137,7 @@ server to the pg_hba.conf file, as listed above).
 
 Leave Network field as default; name the new firewall rule something like
 ```
-postgres-analytics-ingress).
+postgres-analytics-ingress
 ```
 In the direction of traffic, select:
 ```
@@ -237,6 +236,5 @@ Disk, which we can discuss at our next standup.  I think this is a good idea,
 but it does make the implementation a little more complex.  Shouldn't be a big
 deal.
 
-### ReadMe version 0.99
-### William Mass
-### Last Updated - 1/21/20
+### ReadMe version 1.02
+### Last Updated - 1/27/20
