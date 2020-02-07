@@ -9,22 +9,49 @@ import pandas as pd
 
 class Webscraper:
 
-    # Webdriver initialization
-    DRIVER = webdriver.Chrome("./chromedriver")
+    DRIVER = webdriver.Chrome("./chromedriver78")
+    VERBOSE = True
 
     # Common params
     CSS_SELECTOR = By.CSS_SELECTOR
 
-    def __int__(self, verbose=True):
+    def __int__(self, verbose):
+
         self.VERBOSE = verbose
 
     # ========================
     # Selenium Utility methods
     # ========================
 
+    def open_url(self, url):
+
+        """ Opens the given url with the webdriver.
+
+            url -- URL to be opened with the webdriver
+        """
+        self.log(f"Opening URL - {url}")
+        self.DRIVER.get(url)
+
+    def find_element_by_css(self, css_selector):
+
+        """ Finds element by given CSS selector
+
+            css_selector -- CSS selector used to find element
+        """
+
+        self.log(f"Finding element by CSS - {css_selector}")
+
+        return self.DRIVER.find_element_by_css_selector(css_selector)
+
     def wait_for_element_invisible_by_css(self, css_selector, duration=10):
 
-        """ Waits for element invisibility by CSS selector """
+        """ Waits for element invisibility by CSS selector.
+
+            css_selector -- CSS selector used to find desired element
+            duration -- duration webdriver will wait for invisibility of element before raising exception (default 10)
+        """
+
+        self.log(f"Waiting for invisibility of element {css_selector}")
 
         load_condition = EC.invisibility_of_element((By.CSS_SELECTOR, css_selector))
 
@@ -32,34 +59,70 @@ class Webscraper:
 
     def wait_for_element_visible_by_css(self, css_selector, duration=10):
 
-        """ Waits for element visibility by CSS selector """
+        """ Waits for element visibility by CSS selector.
+
+            css_selector -- CSS selector used to find desired element
+            duration -- duration webdriver will wait to find element before raising exception (default 10)
+        """
+
+        self.log(f"Waiting for visibility of element {css_selector}")
 
         load_condition = EC.visibility_of_element((By.CSS_SELECTOR, css_selector))
 
         WebDriverWait(self.DRIVER, duration).until(load_condition)
 
-    def open_url(self, url):
-        self.DRIVER.get(url)
+    def wait_for_css_to_have_attribute(self, css_selector, attribute, value, duration=10):
+
+        """ Waits for given CSS selector to have specified attribute value
+
+            css_selector -- CSS selector used to find desired element
+            attribute -- html attribute to be checked for given value
+            value - attribute value waited on
+            duration -- wait duration (default 10)
+        """
+
+        self.log(f"Waiting for selector - {css_selector} - to have attribute of {attribute}='{value}'")
+
+        selector_with_attribute = f"{css_selector}[{attribute}*='{value}']"
+        self.wait_for_element_visible_by_css(selector_with_attribute, duration)
+
 
     def click_element_by_css(self, css_selector):
 
-        """ Clicks element found by CSS selector """
+        """ Clicks element found by CSS selector.
+
+            css_selector -- CSS selector used to find desired element
+        """
 
         element = self.DRIVER.find_elements_by_css_selector(css_selector)
 
         element.click()
 
+    def close(self):
+
+        """ Closes the current webdriver """
+
+        self.log("Closing Webscraper...")
+        self.DRIVER.close()
+
     def wait(self, duration=10):
+
+        """ Waits for a period of time
+
+            duration -- wait time (default 10)
+        """
+        self.log(f"Waiting for {duration} seconds...")
         time.sleep(duration)
 
     # ========================
     # Beautiful Soup Methods
     # ========================
 
-    def get_html(self):
+    def get_html_soup(self):
 
         """ Returns a BeautifulSoup object of current page's HTML """
 
+        self.log("Retrieving beautiful soup object of HTML")
         content = self.DRIVER.page_source
         return BeautifulSoup(content, 'html.parser')
 
@@ -75,4 +138,4 @@ class Webscraper:
         """
 
         if self.VERBOSE:
-            print(message)
+            print(f"*** Log - {message}")
