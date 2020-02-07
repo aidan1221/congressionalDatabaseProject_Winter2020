@@ -18,4 +18,4 @@ class Billscraper(Webscraper):
         if self.congressionalClass == 116:
             url = self.URL_116
 
-        self.open(url)
+        self.open_url(url)

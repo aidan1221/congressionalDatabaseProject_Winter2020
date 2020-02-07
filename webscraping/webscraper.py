@@ -9,19 +9,22 @@ import pandas as pd
 
 class Webscraper:
 
-    # class params
-    # instantiates webdriver
-    DRIVER = webdriver.Chrome("./chromedriver");
+    # Webdriver initialization
+    DRIVER = webdriver.Chrome("./chromedriver")
+
+    # Common params
     CSS_SELECTOR = By.CSS_SELECTOR
 
-    # Utility methods
+    def __int__(self, verbose=True):
+        self.VERBOSE = verbose
+
+    # ========================
+    # Selenium Utility methods
+    # ========================
+
     def wait_for_element_invisible_by_css(self, css_selector, duration=10):
-        """
-        Waits for element invisibility by css selector
-        :param css_selector: the css selector selenium for use for the wait condition
-        :param duration: the duration of time the driver will wait before throwing an exception
-        :return: void
-        """
+
+        """ Waits for element invisibility by CSS selector """
 
         load_condition = EC.invisibility_of_element((By.CSS_SELECTOR, css_selector))
 
@@ -29,11 +32,47 @@ class Webscraper:
 
     def wait_for_element_visible_by_css(self, css_selector, duration=10):
 
+        """ Waits for element visibility by CSS selector """
+
         load_condition = EC.visibility_of_element((By.CSS_SELECTOR, css_selector))
 
         WebDriverWait(self.DRIVER, duration).until(load_condition)
 
-    def open(self, url):
+    def open_url(self, url):
         self.DRIVER.get(url)
 
-    # def click_element_by_css(self, css_selector):
+    def click_element_by_css(self, css_selector):
+
+        """ Clicks element found by CSS selector """
+
+        element = self.DRIVER.find_elements_by_css_selector(css_selector)
+
+        element.click()
+
+    def wait(self, duration=10):
+        time.sleep(duration)
+
+    # ========================
+    # Beautiful Soup Methods
+    # ========================
+
+    def get_html(self):
+
+        """ Returns a BeautifulSoup object of current page's HTML """
+
+        content = self.DRIVER.page_source
+        return BeautifulSoup(content, 'html.parser')
+
+    # ========================
+    # Console Logger
+    # ========================
+
+    def log(self, message):
+
+        """
+        prints log messages to the console
+        self.VERBOSE set in constructor -> default behavior True
+        """
+
+        if self.VERBOSE:
+            print(message)
