@@ -7,7 +7,7 @@ import time
 import pandas as pd
 
 
-class Webscraper:
+class Webscraper(object):
 
     DRIVER = webdriver.Chrome("./chromedriver78")
     VERBOSE = True
@@ -15,7 +15,7 @@ class Webscraper:
     # Common params
     CSS_SELECTOR = By.CSS_SELECTOR
 
-    def __int__(self, verbose):
+    def __init__(self, verbose):
 
         self.VERBOSE = verbose
 
@@ -32,6 +32,13 @@ class Webscraper:
         self.log(f"Opening URL - {url}")
         self.DRIVER.get(url)
 
+    def close(self):
+
+        """ Closes the current window """
+
+        self.log("Closing Webscraper...")
+        self.DRIVER.close()
+
     def find_element_by_css(self, css_selector):
 
         """ Finds element by given CSS selector
@@ -42,6 +49,19 @@ class Webscraper:
         self.log(f"Finding element by CSS - {css_selector}")
 
         return self.DRIVER.find_element_by_css_selector(css_selector)
+
+    # ========================
+    # Selenium Wait methods
+    # ========================
+
+    def wait(self, duration=10):
+
+        """ Waits for a period of time
+
+            duration -- wait time (default 10)
+        """
+        self.log(f"Waiting for {duration} seconds...")
+        time.sleep(duration)
 
     def wait_for_element_invisible_by_css(self, css_selector, duration=10):
 
@@ -67,11 +87,25 @@ class Webscraper:
 
         self.log(f"Waiting for visibility of element {css_selector}")
 
-        load_condition = EC.visibility_of_element((By.CSS_SELECTOR, css_selector))
+        load_condition = EC.visibility_of_element_located((By.CSS_SELECTOR, css_selector))
 
-        WebDriverWait(self.DRIVER, duration).until(load_condition)
+        WebDriverWait(self.DRIVER, duration).until(load_condition, "Element not found")
 
-    def wait_for_css_to_have_attribute(self, css_selector, attribute, value, duration=10):
+    def wait_for_element_present_by_css(self, css_selector, duration=10):
+
+        """ Waits for element to be present by CSS selector.
+
+            css_selector -- CSS selector used to find desired element
+            duration -- duration webdriver will wait to find element before raising exception (default 10)
+        """
+
+        self.log(f"Waiting for presence of element {css_selector}")
+
+        load_condition = EC.presence_of_element_located((By.CSS_SELECTOR, css_selector))
+
+        WebDriverWait(self.DRIVER, duration).until(load_condition, "Element not found")
+
+    def wait_for_element_to_have_attribute(self, css_selector, attribute, value, duration=10):
 
         """ Waits for given CSS selector to have specified attribute value
 
@@ -84,8 +118,11 @@ class Webscraper:
         self.log(f"Waiting for selector - {css_selector} - to have attribute of {attribute}='{value}'")
 
         selector_with_attribute = f"{css_selector}[{attribute}*='{value}']"
-        self.wait_for_element_visible_by_css(selector_with_attribute, duration)
+        self.wait_for_element_present_by_css(selector_with_attribute, duration)
 
+    # ========================
+    # Selenium Navigation methods
+    # ========================
 
     def click_element_by_css(self, css_selector):
 
@@ -97,22 +134,6 @@ class Webscraper:
         element = self.DRIVER.find_elements_by_css_selector(css_selector)
 
         element.click()
-
-    def close(self):
-
-        """ Closes the current webdriver """
-
-        self.log("Closing Webscraper...")
-        self.DRIVER.close()
-
-    def wait(self, duration=10):
-
-        """ Waits for a period of time
-
-            duration -- wait time (default 10)
-        """
-        self.log(f"Waiting for {duration} seconds...")
-        time.sleep(duration)
 
     # ========================
     # Beautiful Soup Methods

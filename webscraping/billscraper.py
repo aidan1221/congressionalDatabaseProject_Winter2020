@@ -1,28 +1,67 @@
 from webscraper import Webscraper
+import sys
 
 
 class Billscraper(Webscraper):
 
     HOUSE_116 = "https://www.congress.gov/search?q=%7B%22source%22%3A%22legislation%22%2C%22congress%22%3A%22116" \
-              "%22%2C%22chamber%22%3A%22House%22%2C%22type%22%3A%22bills%22%7D"
+        "%22%2C%22chamber%22%3A%22House%22%2C%22type%22%3A%22bills%22%7D"
     HOUSE_115 = "https://www.congress.gov/search?q={%22source%22:%22legislation%22,%22chamber%22:%22House%22,%22" \
-              "type%22:%22bills%22,%22congress%22:115}&searchResultViewType=expanded&KWICView=false"
+        "type%22:%22bills%22,%22congress%22:115}&searchResultViewType=expanded&KWICView=false"
 
-    def __init__(self, chamber, congressionalClass, verbose=True):
+    SENATE_116 = ""
+
+    SENATE_115 = ""
+
+    def __init__(self, chamber, congressional_class, verbose=True):
         super().__init__(verbose)
         self.chamber = chamber
-        self.congressionalClass = congressionalClass
+        self.congressional_class = congressional_class
 
-    def get_house_legislation_page(self):
+    def scrape_bills(self):
 
-        """ Navigates to the appropriate search results page for constructed House class (115 or 116)"""
+        self.get_legislation_page()
 
-        self.log(f"Getting House legislation page for {self.congressionalClass}th Congress")
+        self.wait_for_page_loaded(30)
 
-        if self.congressionalClass == 116:
-            url = self.HOUSE_116
+        number_of_pages = self.get_number_of_search_pages()
+
+        print("HERE WE ARE WE DID IT")
+
+        self.wait()
+
+        self.close()
+
+
+
+
+    def get_legislation_page(self):
+
+        """ Navigates to the appropriate search results page for instantiated
+            Congressional chamber (House or Senate) and class (115 or 116)
+        """
+
+        if self.chamber.lower() == "house":
+
+            if self.congressional_class == 116:
+                url = self.HOUSE_116
+            else:
+                url = self.HOUSE_115
+
+            self.log(f"Getting HOUSE legislation page for {self.congressional_class}th Congress")
+
+        elif self.chamber.lower() == "senate":
+
+            if self.congressional_class == 116:
+                url = self.SENATE_116
+            else:
+                url = self.SENATE_115
+
+            self.log(f"Getting SENATE legislation page for {self.congressional_class}th Congress")
+
         else:
-            url = self.HOUSE_115
+            self.log(f"ERROR - '{self.chamber}' is not a valid option for legislation scraping")
+            sys.exit(1)
 
         self.open_url(url)
 
@@ -38,8 +77,18 @@ class Billscraper(Webscraper):
         page_selector = "#searchTune > div.basic-search-tune-number > div > span.results-number"
         page_element = self.find_element_by_css(page_selector)
 
-        return int(page_element.text).split()[1]
+        return int(page_element.text.split()[1])
 
     def wait_for_page_loaded(self, duration=10):
 
+        """ Waits for the Congress.gov loading spinner to be hidden
+
+            duration -- amount of time driver will wait for condition
+        """
+
+        self.log("Waiting for page loaded")
+
         page_load_selector = "body > div.actionLoaderWrapper"
+        self.wait_for_element_to_have_attribute(page_load_selector, "style", "none", duration)
+
+        self.log("Page loaded")
