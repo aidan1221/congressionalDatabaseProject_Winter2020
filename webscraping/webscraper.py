@@ -15,7 +15,7 @@ class Webscraper(object):
     # Common params
     CSS_SELECTOR = By.CSS_SELECTOR
 
-    def __init__(self, verbose):
+    def __init__(self, verbose=True):
 
         self.VERBOSE = verbose
 
@@ -160,3 +160,16 @@ class Webscraper(object):
 
         if self.VERBOSE:
             print(f"*** Log - {message}")
+
+    # ========================
+    # General Utility Methods
+    # ========================
+
+    def build_data_dict(self, args_list):
+
+        data_dict = dict()
+
+        for arg in args_list:
+            data_dict[arg] = []
+
+        return data_dict

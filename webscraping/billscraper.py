@@ -20,17 +20,19 @@ class Billscraper(Webscraper):
 
     def scrape_bills(self):
 
+        """ Scrapes the bills data on congress.gov for instantiated Chamber and Congressional class """
+
         self.get_legislation_page()
 
-        self.wait_for_page_loaded(30)
+        self.wait_for_page_loaded()
 
         number_of_pages = self.get_number_of_search_pages()
 
-        print("HERE WE ARE WE DID IT")
+        data_dict = self.build_data_dict(["names", "descriptions", "statuses", "bill_committees", "sponsors"])
 
-        self.wait()
-
-        self.close()
+        for i in range(number_of_pages):
+            self.wait_for_page_loaded()
+            self.get_page_data(data_dict)
 
 
 
@@ -64,6 +66,12 @@ class Billscraper(Webscraper):
             sys.exit(1)
 
         self.open_url(url)
+
+    def get_page_data(self, data_dict):
+
+        """ Parses beautiful soup object of current page's html for desired bill data """
+
+        return NotImplementedError
 
     def get_number_of_search_pages(self):
 
