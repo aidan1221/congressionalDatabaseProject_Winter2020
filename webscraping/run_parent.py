@@ -6,5 +6,4 @@ bs = Billscraper("house", 116, True)
 
 bs.scrape_bills()
 
-
-bs.close_window()
+bs.quit_driver()

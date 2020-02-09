@@ -61,6 +61,7 @@ class Webscraper(object):
         """ Quits the webdriver, closing all windows. """
 
         self.log("Shutting down webdriver")
+        self.DRIVER.close()
         self.DRIVER.quit()
 
     # ========================
@@ -159,6 +160,20 @@ class Webscraper(object):
         self.log("Retrieving beautiful soup object of HTML")
         content = self.DRIVER.page_source
         return BeautifulSoup(content, 'html.parser')
+
+    # ========================
+    # Pandas Methods
+    # ========================
+
+    def csv_from_dict(self, file_name, dict):
+        """ Writes dictionary to csv file with given filename """
+
+        file_path = './csv_data/' + file_name
+
+        self.log(f"Creating csv from dictionary -- {file_path}")
+        data_frame = pd.DataFrame.from_dict(dict)
+
+        data_frame.to_csv(file_path, index=False, encoding="utf-8")
 
     # ========================
     # Console Logger

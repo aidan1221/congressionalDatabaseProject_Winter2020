@@ -46,6 +46,7 @@ class Billscraper(Webscraper):
             self.wait_for_page_loaded()
             self.get_page_data(data_dict)
 
+            # each list must be of same length to convert to pandas DataFrame
             assert len(data_dict["names"]) == self.bill_count, "len(names) = {} -- should be {}"\
                 .format(len(data_dict["names"]), self.bill_count)
             assert len(data_dict["descriptions"]) == self.bill_count, "len(descriptions) = {} -- should be {}" \
@@ -61,6 +62,7 @@ class Billscraper(Webscraper):
             self.click_to_next_page(current_page, number_of_pages)
 
         print(data_dict)
+        self.csv_from_dict('house_116_bills.csv', data_dict)
 
 
 
@@ -124,11 +126,11 @@ class Billscraper(Webscraper):
                 print(err)
                 continue
 
-            data_dict["names"].append(name)
-            data_dict["descriptions"].append(description)
-            data_dict["statuses"].append(status)
-            data_dict["bill_committees"].append(bill_committee)
-            data_dict["sponsors"].append(sponsor)
+            data_dict["names"].append(name.strip())
+            data_dict["descriptions"].append(description.strip())
+            data_dict["statuses"].append(status.strip())
+            data_dict["bill_committees"].append(bill_committee.strip())
+            data_dict["sponsors"].append(sponsor.strip())
 
     def click_to_next_page(self, current_page, num_pages):
 
