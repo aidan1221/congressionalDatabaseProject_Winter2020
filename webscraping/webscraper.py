@@ -39,7 +39,7 @@ class Webscraper(object):
         self.log(f"Opening URL - {url}")
         self.DRIVER.get(url)
 
-    def close(self):
+    def close_window(self):
 
         """ Closes the current window """
 
@@ -56,6 +56,12 @@ class Webscraper(object):
         self.log(f"Finding element by CSS - {css_selector}")
 
         return self.DRIVER.find_element_by_css_selector(css_selector)
+
+    def quit_driver(self):
+        """ Quits the webdriver, closing all windows. """
+
+        self.log("Shutting down webdriver")
+        self.DRIVER.quit()
 
     # ========================
     # Selenium Wait methods

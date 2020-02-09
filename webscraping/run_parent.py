@@ -7,4 +7,4 @@ bs = Billscraper("house", 116, True)
 bs.scrape_bills()
 
 
-bs.close()
+bs.close_window()
