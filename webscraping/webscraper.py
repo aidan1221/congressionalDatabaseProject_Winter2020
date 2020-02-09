@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import time
 import pandas as pd
@@ -15,7 +16,13 @@ class Webscraper(object):
     # Common params
     CSS_SELECTOR = By.CSS_SELECTOR
 
-    def __init__(self, verbose=True):
+    def __init__(self, headless=False, verbose=True):
+        # if headless == True -> run chromedriver headless
+        if headless:
+            chrome_options = Options()
+            chrome_options.add_argument('--headless')
+            chrome_options.add_argument('--window-size=1920x1080')
+            self.DRIVER = webdriver.Chrome(chrome_options=chrome_options, executable_path='./chromedriver78')
 
         self.VERBOSE = verbose
 

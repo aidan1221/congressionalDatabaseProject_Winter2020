@@ -23,8 +23,8 @@ class Billscraper(Webscraper):
 
     NEXT_PAGE_SELECTOR = "#searchTune > div.basic-search-tune-number > div > a.next > i"
 
-    def __init__(self, chamber, congressional_class, verbose=True):
-        super().__init__(verbose)
+    def __init__(self, chamber, congressional_class, headless=False, verbose=True):
+        super().__init__(headless, verbose)
         self.chamber = chamber
         self.congressional_class = congressional_class
         self.bill_count = 0
@@ -105,17 +105,30 @@ class Billscraper(Webscraper):
 
         for bill in bills:
             try:
+
                 for item in bill.findAll('span', attrs={'class':'result-heading'}):
-                    data_dict["names"].append(item.find('a').text)
-                data_dict["descriptions"].append(bill.find('span', attrs={'class': 'result-title'}).text)
+                    name = item.find('a').text
+
+                description = bill.find('span', attrs={'class': 'result-title'}).text
+
                 for item in bill.findAll('span', attrs={'class': 'result-item result-tracker'}):
-                    data_dict["statuses"].append((' ').join(item.findAll('p', attrs={'class': 'hide_fromsighted'})[0].text.split()[5:]))
-                data_dict["bill_committees"].append(bill.findAll('span', attrs={'class': 'result-item'})[1].text.split('-')[1])
-                data_dict["sponsors"].append(bill.findAll('span', attrs={'class': 'result-item'})[0].find('a').text)
+                    status = (' ').join(item.findAll('p', attrs={'class': 'hide_fromsighted'})[0].text.split()[5:])
+
+                bill_committee = bill.findAll('span', attrs={'class': 'result-item'})[1].text.split('-')[1]
+
+                sponsor = bill.findAll('span', attrs={'class': 'result-item'})[0].find('a').text
+
                 self.bill_count += 1
+
             except Exception as err:
                 print(err)
                 continue
+
+            data_dict["names"].append(name)
+            data_dict["descriptions"].append(description)
+            data_dict["statuses"].append(status)
+            data_dict["bill_committees"].append(bill_committee)
+            data_dict["sponsors"].append(sponsor)
 
     def click_to_next_page(self, current_page, num_pages):
 
