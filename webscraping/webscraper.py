@@ -165,11 +165,15 @@ class Webscraper(object):
     # General Utility Methods
     # ========================
 
-    def build_data_dict(self, args_list):
+    def build_data_dict(self, dict_keys):
 
+        """ builds a python dictionary with given keys
+
+            dict_keys -- list of keys to build dictionary with
+        """
         data_dict = dict()
 
-        for arg in args_list:
-            data_dict[arg] = []
+        for key in dict_keys:
+            data_dict[key] = []
 
         return data_dict

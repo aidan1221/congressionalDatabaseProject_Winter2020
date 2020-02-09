@@ -4,6 +4,10 @@ import sys
 
 class Billscraper(Webscraper):
 
+    # ===========
+    # URLs
+    # ===========
+
     HOUSE_116 = "https://www.congress.gov/search?q=%7B%22source%22%3A%22legislation%22%2C%22congress%22%3A%22116" \
         "%22%2C%22chamber%22%3A%22House%22%2C%22type%22%3A%22bills%22%7D"
     HOUSE_115 = "https://www.congress.gov/search?q={%22source%22:%22legislation%22,%22chamber%22:%22House%22,%22" \
@@ -13,10 +17,18 @@ class Billscraper(Webscraper):
 
     SENATE_115 = ""
 
+    # ===========
+    # SELECTORS
+    # ===========
+
+    NEXT_PAGE_SELECTOR = "#searchTune > div.basic-search-tune-number > div > a.next > i"
+
     def __init__(self, chamber, congressional_class, verbose=True):
         super().__init__(verbose)
         self.chamber = chamber
         self.congressional_class = congressional_class
+        self.bill_count = 0
+
 
     def scrape_bills(self):
 
@@ -33,6 +45,22 @@ class Billscraper(Webscraper):
         for i in range(number_of_pages):
             self.wait_for_page_loaded()
             self.get_page_data(data_dict)
+
+            assert len(data_dict["names"]) == self.bill_count, "len(names) = {} -- should be {}"\
+                .format(len(data_dict["names"]), self.bill_count)
+            assert len(data_dict["descriptions"]) == self.bill_count, "len(descriptions) = {} -- should be {}" \
+                .format(len(data_dict["descriptions"]), self.bill_count)
+            assert len(data_dict["statuses"]) == self.bill_count, "len(statuses) = {} -- should be {}" \
+                .format(len(data_dict["statuses"]), self.bill_count)
+            assert len(data_dict["bill_committees"]) == self.bill_count, "len(bill_committees) = {} -- should be {}" \
+                .format(len(data_dict["bill_committees"]), self.bill_count)
+            assert len(data_dict["sponsors"]) == self.bill_count, "len(sponsors) = {} -- should be {}" \
+                .format(len(data_dict["sponsors"]), self.bill_count)
+
+            current_page = i + 1
+            self.click_to_next_page(current_page, number_of_pages)
+
+        print(data_dict)
 
 
 
@@ -71,7 +99,42 @@ class Billscraper(Webscraper):
 
         """ Parses beautiful soup object of current page's html for desired bill data """
 
-        return NotImplementedError
+        soup = self.get_html_soup()
+
+        bills = soup.findAll('li', attrs={'class': 'expanded'})
+
+        for bill in bills:
+            try:
+                for item in bill.findAll('span', attrs={'class':'result-heading'}):
+                    data_dict["names"].append(item.find('a').text)
+                data_dict["descriptions"].append(bill.find('span', attrs={'class': 'result-title'}).text)
+                for item in bill.findAll('span', attrs={'class': 'result-item result-tracker'}):
+                    data_dict["statuses"].append((' ').join(item.findAll('p', attrs={'class': 'hide_fromsighted'})[0].text.split()[5:]))
+                data_dict["bill_committees"].append(bill.findAll('span', attrs={'class': 'result-item'})[1].text.split('-')[1])
+                data_dict["sponsors"].append(bill.findAll('span', attrs={'class': 'result-item'})[0].find('a').text)
+                self.bill_count += 1
+            except Exception as err:
+                print(err)
+                continue
+
+    def click_to_next_page(self, current_page, num_pages):
+
+        """ Clicks the next page button if not on the last page
+
+            current_page -- the current page # of the search
+            num_pages -- the total number of pages in the search
+        """
+
+        if current_page != num_pages:
+
+            self.log(f"Clicking to the next page - {current_page + 1}")
+
+            # assert len(names) == 100 * (current_page+1), "len(names) = {}".format(len(names))
+            next_page_button = self.find_element_by_css(self.NEXT_PAGE_SELECTOR)
+            next_page_button.click()
+
+        else:
+            self.log(f"Last page reached - {current_page}")
 
     def get_number_of_search_pages(self):
 
