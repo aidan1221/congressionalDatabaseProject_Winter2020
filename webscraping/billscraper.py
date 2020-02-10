@@ -13,9 +13,11 @@ class Billscraper(Webscraper):
     HOUSE_115 = "https://www.congress.gov/search?q={%22source%22:%22legislation%22,%22chamber%22:%22House%22,%22" \
         "type%22:%22bills%22,%22congress%22:115}&searchResultViewType=expanded&KWICView=false"
 
-    SENATE_116 = ""
+    SENATE_116 = "https://www.congress.gov/search?q=%7B%22source%22%3A%22legislation%22%2C%22congress%22%3A%22116" \
+                 "%22%2C%22chamber%22%3A%22Senate%22%2C%22type%22%3A%22bills%22%7D"
 
-    SENATE_115 = ""
+    SENATE_115 = "https://www.congress.gov/search?q=%7B%22source%22%3A%22legislation%22%2C%22chamber%22%3A%22Senate" \
+                 "%22%2C%22type%22%3A%22bills%22%2C%22congress%22%3A115%7D"
 
     # ===========
     # SELECTORS
@@ -23,18 +25,27 @@ class Billscraper(Webscraper):
 
     NEXT_PAGE_SELECTOR = "#searchTune > div.basic-search-tune-number > div > a.next > i"
 
-    def __init__(self, chamber, congressional_class, headless=False, verbose=True):
+    def __init__(self, headless=False, verbose=True):
         super().__init__(headless, verbose)
-        self.chamber = chamber
-        self.congressional_class = congressional_class
-        self.bill_count = 0
+        self.BILL_COUNT = 0
 
+    def scrape_bills(self, chamber, congressional_class):
 
-    def scrape_bills(self):
+        """ Scrapes the bills data on congress.gov for chamber and congressional class
 
-        """ Scrapes the bills data on congress.gov for instantiated Chamber and Congressional class """
+            chamber -- the chamber of Congress to scrape bills for (string)
+            congressional_class -- class 115 or 116 of Congress (int)
+        """
 
-        self.get_legislation_page()
+        self.log(f"Scraping bills for {chamber} of {congressional_class}th Congress")
+
+        # resets BILL_COUNT to 0 for consecutive scraping sessions
+        self.BILL_COUNT = 0
+
+        # builds file name from args for csv file generated from data
+        file_name = chamber + '_' + str(congressional_class) + '_' + "bills.csv"
+
+        self.get_legislation_page(chamber, congressional_class)
 
         self.wait_for_page_loaded()
 
@@ -47,52 +58,49 @@ class Billscraper(Webscraper):
             self.get_page_data(data_dict)
 
             # each list must be of same length to convert to pandas DataFrame
-            assert len(data_dict["names"]) == self.bill_count, "len(names) = {} -- should be {}"\
-                .format(len(data_dict["names"]), self.bill_count)
-            assert len(data_dict["descriptions"]) == self.bill_count, "len(descriptions) = {} -- should be {}" \
-                .format(len(data_dict["descriptions"]), self.bill_count)
-            assert len(data_dict["statuses"]) == self.bill_count, "len(statuses) = {} -- should be {}" \
-                .format(len(data_dict["statuses"]), self.bill_count)
-            assert len(data_dict["bill_committees"]) == self.bill_count, "len(bill_committees) = {} -- should be {}" \
-                .format(len(data_dict["bill_committees"]), self.bill_count)
-            assert len(data_dict["sponsors"]) == self.bill_count, "len(sponsors) = {} -- should be {}" \
-                .format(len(data_dict["sponsors"]), self.bill_count)
+            assert len(data_dict["names"]) == self.BILL_COUNT, "len(names) = {} -- should be {}"\
+                .format(len(data_dict["names"]), self.BILL_COUNT)
+            assert len(data_dict["descriptions"]) == self.BILL_COUNT, "len(descriptions) = {} -- should be {}" \
+                .format(len(data_dict["descriptions"]), self.BILL_COUNT)
+            assert len(data_dict["statuses"]) == self.BILL_COUNT, "len(statuses) = {} -- should be {}" \
+                .format(len(data_dict["statuses"]), self.BILL_COUNT)
+            assert len(data_dict["bill_committees"]) == self.BILL_COUNT, "len(bill_committees) = {} -- should be {}" \
+                .format(len(data_dict["bill_committees"]), self.BILL_COUNT)
+            assert len(data_dict["sponsors"]) == self.BILL_COUNT, "len(sponsors) = {} -- should be {}" \
+                .format(len(data_dict["sponsors"]), self.BILL_COUNT)
 
             current_page = i + 1
             self.click_to_next_page(current_page, number_of_pages)
 
-        print(data_dict)
-        self.csv_from_dict('house_116_bills.csv', data_dict)
+        self.log("Scraping completed... Writing to csv")
+        self.csv_from_dict(file_name, data_dict)
 
-
-
-
-    def get_legislation_page(self):
+    def get_legislation_page(self, chamber, congressional_class):
 
         """ Navigates to the appropriate search results page for instantiated
             Congressional chamber (House or Senate) and class (115 or 116)
         """
 
-        if self.chamber.lower() == "house":
+        if chamber.lower() == "house":
 
-            if self.congressional_class == 116:
+            if congressional_class == 116:
                 url = self.HOUSE_116
             else:
                 url = self.HOUSE_115
 
-            self.log(f"Getting HOUSE legislation page for {self.congressional_class}th Congress")
+            self.log(f"Getting HOUSE legislation page for {congressional_class}th Congress")
 
-        elif self.chamber.lower() == "senate":
+        elif chamber.lower() == "senate":
 
-            if self.congressional_class == 116:
+            if congressional_class == 116:
                 url = self.SENATE_116
             else:
                 url = self.SENATE_115
 
-            self.log(f"Getting SENATE legislation page for {self.congressional_class}th Congress")
+            self.log(f"Getting SENATE legislation page for {congressional_class}th Congress")
 
         else:
-            self.log(f"ERROR - '{self.chamber}' is not a valid option for legislation scraping")
+            self.log(f"ERROR - '{chamber}' is not a valid option for legislation scraping")
             sys.exit(1)
 
         self.open_url(url)
@@ -100,6 +108,8 @@ class Billscraper(Webscraper):
     def get_page_data(self, data_dict):
 
         """ Parses beautiful soup object of current page's html for desired bill data """
+
+        self.log("Parsing page for bill data")
 
         soup = self.get_html_soup()
 
@@ -120,12 +130,13 @@ class Billscraper(Webscraper):
 
                 sponsor = bill.findAll('span', attrs={'class': 'result-item'})[0].find('a').text
 
-                self.bill_count += 1
+                self.BILL_COUNT += 1
 
             except Exception as err:
-                print(err)
+                self.log_error(err)
                 continue
 
+            self.log(f"Bill {name} collected --> adding data to dictionary")
             data_dict["names"].append(name.strip())
             data_dict["descriptions"].append(description.strip())
             data_dict["statuses"].append(status.strip())

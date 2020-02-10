@@ -184,10 +184,21 @@ class Webscraper(object):
         """
         prints log messages to the console
         self.VERBOSE set in constructor -> default behavior True
+
+        message -- message to logged in console
         """
 
         if self.VERBOSE:
             print(f"*** Log - {message}")
+
+    def log_error(self, message):
+        """ prints error message to the console
+            self.VERBOSE set in constructor -> default behavior True
+
+            message -- error message to be logged in console
+        """
+        if self.VERBOSE:
+            print(f"*** ERROR - {message}")
 
     # ========================
     # General Utility Methods
