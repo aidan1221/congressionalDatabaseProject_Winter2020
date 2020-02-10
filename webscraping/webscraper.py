@@ -10,7 +10,7 @@ import pandas as pd
 
 class Webscraper(object):
 
-    DRIVER = webdriver.Chrome("./chromedriver78")
+    DRIVER = webdriver.Chrome("./chromedriver.exe")
     VERBOSE = True
 
     # Common params
