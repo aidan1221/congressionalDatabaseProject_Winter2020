@@ -2,9 +2,14 @@ from webscraper import Webscraper
 from billscraper import Billscraper
 
 
-bs = Billscraper("house", 116)
+HOUSE = "house"
+SENATE = "senate"
+CONGRESS = [115, 116]
 
-bs.scrape_bills()
+bs = Billscraper(True)
 
+for num in CONGRESS:
+    bs.scrape_bills(HOUSE, num)
+    bs.scrape_bills(SENATE, num)
 
-bs.close()
+bs.quit_driver()

@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import time
 import pandas as pd
@@ -15,7 +16,13 @@ class Webscraper(object):
     # Common params
     CSS_SELECTOR = By.CSS_SELECTOR
 
-    def __init__(self, verbose=True):
+    def __init__(self, headless=False, verbose=True):
+        # if headless == True -> run chromedriver headless
+        if headless:
+            chrome_options = Options()
+            chrome_options.add_argument('--headless')
+            chrome_options.add_argument('--window-size=1920x1080')
+            self.DRIVER = webdriver.Chrome(chrome_options=chrome_options, executable_path='./chromedriver78')
 
         self.VERBOSE = verbose
 
@@ -32,7 +39,7 @@ class Webscraper(object):
         self.log(f"Opening URL - {url}")
         self.DRIVER.get(url)
 
-    def close(self):
+    def close_window(self):
 
         """ Closes the current window """
 
@@ -49,6 +56,13 @@ class Webscraper(object):
         self.log(f"Finding element by CSS - {css_selector}")
 
         return self.DRIVER.find_element_by_css_selector(css_selector)
+
+    def quit_driver(self):
+        """ Quits the webdriver, closing all windows. """
+
+        self.log("Shutting down webdriver")
+        self.DRIVER.close()
+        self.DRIVER.quit()
 
     # ========================
     # Selenium Wait methods
@@ -148,6 +162,20 @@ class Webscraper(object):
         return BeautifulSoup(content, 'html.parser')
 
     # ========================
+    # Pandas Methods
+    # ========================
+
+    def csv_from_dict(self, file_name, dict):
+        """ Writes dictionary to csv file with given filename """
+
+        file_path = './csv_data/' + file_name
+
+        self.log(f"Creating csv from dictionary -- {file_path}")
+        data_frame = pd.DataFrame.from_dict(dict)
+
+        data_frame.to_csv(file_path, index=False, encoding="utf-8")
+
+    # ========================
     # Console Logger
     # ========================
 
@@ -156,20 +184,35 @@ class Webscraper(object):
         """
         prints log messages to the console
         self.VERBOSE set in constructor -> default behavior True
+
+        message -- message to logged in console
         """
 
         if self.VERBOSE:
             print(f"*** Log - {message}")
 
+    def log_error(self, message):
+        """ prints error message to the console
+            self.VERBOSE set in constructor -> default behavior True
+
+            message -- error message to be logged in console
+        """
+        if self.VERBOSE:
+            print(f"*** ERROR - {message}")
+
     # ========================
     # General Utility Methods
     # ========================
 
-    def build_data_dict(self, args_list):
+    def build_data_dict(self, dict_keys):
 
+        """ builds a python dictionary with given keys
+
+            dict_keys -- list of keys to build dictionary with
+        """
         data_dict = dict()
 
-        for arg in args_list:
-            data_dict[arg] = []
+        for key in dict_keys:
+            data_dict[key] = []
 
         return data_dict
