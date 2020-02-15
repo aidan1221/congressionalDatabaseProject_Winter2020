@@ -10,7 +10,7 @@ import pandas as pd
 
 class Webscraper(object):
 
-    DRIVER = webdriver.Chrome("./chromedriver78")
+    DRIVER = webdriver.Chrome("./chromedriver77")
     VERBOSE = True
 
     # Common params
@@ -56,6 +56,17 @@ class Webscraper(object):
         self.log(f"Finding element by CSS - {css_selector}")
 
         return self.DRIVER.find_element_by_css_selector(css_selector)
+
+    def find_elements_by_css(self, css_selector):
+
+        """ Finds multiple elements by given CSS selector
+
+            css_selector -- CSS selector used to find element
+        """
+
+        self.log(f"Finding element by CSS - {css_selector}")
+
+        return self.DRIVER.find_elements_by_css_selector(css_selector)
 
     # ========================
     # Selenium Wait methods
