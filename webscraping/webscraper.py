@@ -40,7 +40,7 @@ class Webscraper(object):
         self.log(f"Opening URL - {url}")
         self.DRIVER.get(url)
 
-    def close(self):
+    def close_window(self):
 
         """ Closes the current window """
 
@@ -67,6 +67,13 @@ class Webscraper(object):
         self.log(f"Finding element by CSS - {css_selector}")
 
         return self.DRIVER.find_elements_by_css_selector(css_selector)
+
+    def quit_driver(self):
+        """ Quits the webdriver, closing all windows. """
+
+        self.log("Shutting down webdriver")
+        self.DRIVER.close()
+        self.DRIVER.quit()
 
     # ========================
     # Selenium Wait methods
@@ -166,6 +173,20 @@ class Webscraper(object):
         return BeautifulSoup(content, 'html.parser')
 
     # ========================
+    # Pandas Methods
+    # ========================
+
+    def csv_from_dict(self, file_name, dict):
+        """ Writes dictionary to csv file with given filename """
+
+        file_path = './csv_data/' + file_name
+
+        self.log(f"Creating csv from dictionary -- {file_path}")
+        data_frame = pd.DataFrame.from_dict(dict)
+
+        data_frame.to_csv(file_path, index=False, encoding="utf-8")
+
+    # ========================
     # Console Logger
     # ========================
 
@@ -174,10 +195,21 @@ class Webscraper(object):
         """
         prints log messages to the console
         self.VERBOSE set in constructor -> default behavior True
+
+        message -- message to logged in console
         """
 
         if self.VERBOSE:
             print(f"*** Log - {message}")
+
+    def log_error(self, message):
+        """ prints error message to the console
+            self.VERBOSE set in constructor -> default behavior True
+
+            message -- error message to be logged in console
+        """
+        if self.VERBOSE:
+            print(f"*** ERROR - {message}")
 
     # ========================
     # General Utility Methods
