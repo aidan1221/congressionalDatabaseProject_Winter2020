@@ -24,8 +24,6 @@ class Committeescraper(Webscraper):
                          "> li:nth-child({}) > a"
 
     HOUSE_SUBCOMMITTEE_UL = "#subcom_list > ul > li > a"
-
-
     HOUSE_SUBCOMMITTEE_LI = "#subcom_list > ul > li:nth-child({}) > a"
 
     MEMBERS_LINK = "#content > div.featured.committee-detail > div.overview_wrapper.bill > div.tertiary > div > ul > " \
@@ -47,6 +45,7 @@ class Committeescraper(Webscraper):
         house_subcommittee_dict = dict()
         house_subcommittee_member_dict = dict()
         house_member_dict = dict()
+        house_leadership_dict = dict()
 
         self.open_url(self.COMMITTEES_URL)
         main_window = self.DRIVER.current_window_handle
@@ -62,6 +61,8 @@ class Committeescraper(Webscraper):
 
             house_subcommittee_dict[committee_name] = []
             house_member_dict[committee_name] = []
+            house_leadership_dict[committee_name] = []
+
 
             item.click()
             time.sleep(2)
@@ -79,11 +80,37 @@ class Committeescraper(Webscraper):
                 if handle != main_window:
                     self.DRIVER.switch_to.window(handle)
 
+            current_url = self.DRIVER.current_url
+            print(current_url)
+            assert "http://clerk.house.gov/" in str(current_url), "ummmm what?"
+
+            self.wait_for_element_present_by_css(self.HOUSE_CLERK_IMG)
+
+            print("Getting majority members")
+            majority_membership_links = self.find_elements_by_css(self.HOUSE_MAJORITY_LINKS)
+
+            for link in majority_membership_links:
+                member_name = link.text
+                house_member_dict[committee_name].append(member_name)
+
+            print("Getting minority members")
+            minority_membership_links = self.find_elements_by_css(self.HOUSE_MINORITY_LINKS)
+
+            for link in minority_membership_links:
+                member_name = link.text
+                house_member_dict[committee_name].append(member_name)
+
+            print("Getting committee leadership (chair, ranking member)")
+            leadership = (majority_membership_links[0].text, minority_membership_links[0].text)
+            house_leadership_dict[committee_name].append(leadership)
+
+            # Get subcommittees
             house_member_dict, house_subcommittee_member_dict, house_subcommittee_dict = self.scrape_house_subcommittee(committee_name, house_subcommittee_dict, house_subcommittee_member_dict, house_member_dict)
 
         print("Data collected successfully")
         self.DRIVER.quit()
-        return house_member_dict, house_subcommittee_member_dict, house_subcommittee_dict
+
+        return house_member_dict, house_subcommittee_member_dict, house_subcommittee_dict, house_leadership_dict
 
     def scrape_house_subcommittee(self, committee_name, subcommittee_dict, subcommittee_member_dict, member_dict):
         current_url = self.DRIVER.current_url
