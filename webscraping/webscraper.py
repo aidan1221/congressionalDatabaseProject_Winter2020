@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import time
+import csv
 import pandas as pd
 
 
@@ -56,6 +57,16 @@ class Webscraper(object):
         self.log(f"Finding element by CSS - {css_selector}")
 
         return self.DRIVER.find_element_by_css_selector(css_selector)
+
+    def find_elements_by_css(self, css_selector):
+        """ Finds elements by given CSS selector
+
+                    css_selector -- CSS selector used to find element
+                """
+
+        self.log(f"Finding element by CSS - {css_selector}")
+
+        return self.DRIVER.find_elements_by_css_selector(css_selector)
 
     # ========================
     # Selenium Wait methods

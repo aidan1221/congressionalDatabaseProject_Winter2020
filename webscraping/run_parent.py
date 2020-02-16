@@ -1,10 +1,9 @@
 from webscraper import Webscraper
 from billscraper import Billscraper
+from rollcallscraper import Rollcallscraper
+
+RS = Rollcallscraper()
+
+RS.roll_call_scrape()
 
 
-bs = Billscraper("house", 116, True)
-
-bs.scrape_bills()
-
-
-bs.close()
