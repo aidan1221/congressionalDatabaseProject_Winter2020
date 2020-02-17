@@ -8,8 +8,11 @@ CONGRESS = [115, 116]
 
 bs = Billscraper(True)
 
-for num in CONGRESS:
-    bs.scrape_bills(HOUSE, num)
-    bs.scrape_bills(SENATE, num)
+# for num in CONGRESS:
+#     bs.scrape_bills(HOUSE, num)
+#     bs.scrape_bills(SENATE, num)
+#
+# bs.quit_driver()
 
-bs.quit_driver()
+
+bs.scrape_co_sponsors("house", 116)

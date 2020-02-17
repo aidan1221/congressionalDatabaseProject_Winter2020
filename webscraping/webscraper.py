@@ -3,6 +3,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup
 import time
 import pandas as pd
@@ -56,6 +57,16 @@ class Webscraper(object):
         self.log(f"Finding element by CSS - {css_selector}")
 
         return self.DRIVER.find_element_by_css_selector(css_selector)
+
+    def find_elements_by_css(self, css_selector):
+        """ Finds list of elements by given CSS selector
+
+            css_selector -- CSS selector used to find elements
+        """
+
+        self.log(f"Finding all elements by CSS - {css_selector}")
+
+        return self.DRIVER.find_elements_by_css_selector(css_selector)
 
     def quit_driver(self):
         """ Quits the webdriver, closing all windows. """
@@ -144,6 +155,7 @@ class Webscraper(object):
 
             css_selector -- CSS selector used to find desired element
         """
+
 
         element = self.DRIVER.find_elements_by_css_selector(css_selector)
 

@@ -1,6 +1,6 @@
 from webscraper import Webscraper
 import sys
-
+from selenium.webdriver.common.keys import Keys
 
 class Billscraper(Webscraper):
 
@@ -74,6 +74,98 @@ class Billscraper(Webscraper):
 
         self.log("Scraping completed... Writing to csv")
         self.csv_from_dict(file_name, data_dict)
+
+    def scrape_co_sponsors(self, chamber, congressional_class):
+        """ Scrapes co-sponsor date for congressional bills """
+
+        self.log("Scraping co-sponsor data for congressional bills")
+
+        file_name = chamber + '_' + str(congressional_class) + '_' + "bills_cosponsors.csv"
+
+        self.get_legislation_page(chamber, congressional_class)
+
+        self.wait_for_page_loaded()
+
+        number_of_pages = self.get_number_of_search_pages()
+
+        data_dict = self.build_data_dict(["bill_name", "co-sponsors"])
+
+        for i in range(number_of_pages):
+
+            current_url = self.DRIVER.current_url
+
+            current_page = i + 1
+
+            self.wait_for_page_loaded()
+
+            bills = self.find_elements_by_css("ol[class*='basic-search'] > li[class*='expanded']")
+
+            for i in range(len(bills)):
+
+                bills = self.find_elements_by_css("ol[class*='basic-search'] > li[class*='expanded']")
+                bill_name = bills[i].find_element_by_css_selector("span:nth-of-type(1) > a").text
+                self.log(f"Getting co-sponsors for bill {bill_name}")
+                try:
+                    cosponsor_link = bills[i].find_element_by_css_selector("span[class*='result-item'] > a:nth-of-type(2)")
+                    if int(cosponsor_link.text) > 0:
+                        cosponsor_link.click()
+                        self.get_cosponsors_data(bill_name, data_dict)
+                    else:
+                        self.log(f"Appending empty string for bill - {bill_name}")
+                        data_dict["bill_name"].append(bill_name)
+                        data_dict["co-sponsors"].append("")
+                except Exception as err:
+                    self.log_error(f"{bill_name} data NOT collected ***")
+                    self.log_error(err)
+                    continue
+
+                self.get_current_bills_page(current_page, current_url)
+
+            self.click_to_next_page(current_page, number_of_pages)
+
+        self.log("finished scraping co-sponsors!")
+        self.csv_from_dict(data_dict)
+
+    def get_cosponsors_data(self, bill_name, data_dict):
+
+        self.log(f"Getting cosponsor DATA for bill {bill_name}")
+
+        soup = self.get_html_soup()
+
+        # data = soup.findAll('tr')
+        # for d in data:
+        #     cosponsor = d.findAll('td')[0].find('a').text
+        #     self.log(f"Adding {cosponsor} as CO-SPONSOR to {bill_name}")
+        #     data_dict["bill_name"].append(bill_name)
+        #     data_dict["co-sponsors"].append(cosponsor)
+
+        for d in soup.findAll('td', attrs={'class': 'actions'}):
+            cosponsor = d.find('a').text
+            self.log(f"Adding {cosponsor} as CO-SPONSOR to {bill_name}")
+            data_dict["bill_name"].append(bill_name)
+            data_dict["co-sponsors"].append(cosponsor)
+
+        self.log("CURRENT DICT: \n" + str(data_dict))
+        assert len(data_dict["bill_name"]) == len(data_dict["co-sponsors"]), \
+            f"len(data_dict['bill_name']) = {len(data_dict['bill_name'])}  -- len(data_dict['co-sponsors']) == {len(data_dict['co-sponsors'])}"
+
+
+    def get_current_bills_page(self, current_page, current_bills_url):
+
+        self.log(f"Getting current page of search - PAGE {current_page}")
+
+        self.open_url(current_bills_url)
+
+        self.wait_for_element_present_by_css(".pagination > input")
+        page_number_field = self.find_element_by_css(".pagination > input")
+        value = int(page_number_field.get_attribute('value'))
+
+        self.log(f"Current page VALUE = {value}")
+
+        assert value == current_page, f"you're on the wrong page! Page is {value} - should be {current_page}"
+
+        self.wait_for_page_loaded()
+
 
     def get_legislation_page(self, chamber, congressional_class):
 
