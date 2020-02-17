@@ -167,4 +167,7 @@ class Committeescraper(Webscraper):
 
         # ADD senate_subcommittee_scraper
 
+        # 115th congress: https://github.com/unitedstates/congress-legislators/blob/fc5647af4535a397710afa98dd97eef2516253ac/committee-membership-current.yaml
+        # 116th congress: https://github.com/unitedstates/congress-legislators/blob/master/committee-membership-current.yaml
+
 

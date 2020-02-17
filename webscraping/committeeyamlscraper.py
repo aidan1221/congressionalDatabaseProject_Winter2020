@@ -8,18 +8,17 @@ def parse_committee_yaml(file_path):
         committee_dict = dict()
         committee_leadership_dict = dict()
 
-        for key, value in committees_list.items():
-            committee_name = key
+        for committee_name, value in committees_list.items():
             committee_dict[committee_name] = []
             committee_leadership_dict[committee_name] = []
             for item in value:
                 name = ''
-                for thing, stuff in item.items():
-                    if thing == 'name':
-                        committee_dict[committee_name].append(stuff)
-                        name = stuff
-                    if thing == 'title':
-                        committee_leadership_dict[committee_name].append((name, stuff))
+                for k, v in item.items():
+                    if k == 'name':
+                        committee_dict[committee_name].append(v)
+                        name = v
+                    if k == 'title':
+                        committee_leadership_dict[committee_name].append((name, v))
 
         # print(committee_dict)
         # print(committee_leadership_dict)
@@ -27,17 +26,14 @@ def parse_committee_yaml(file_path):
         return committee_dict, committee_leadership_dict
 
 
-# committee_dict_115, committee_leadership_dict_115 = parse_committee_yaml()
+committee_dict_115, committee_leadership_dict_115 = parse_committee_yaml('yaml/115_subcommittees.yaml')
 committee_dict_116, committee_leadership_dict_116 = parse_committee_yaml('yaml/116_subcommittees.yaml')
 
-# print("115: ", committee_dict_115)
-
-print("116: ", committee_dict_116)
-
-# HLIG08 [{'name': 'Eric Swalwell', 'party': 'majority', 'rank': 1, 'title': 'Chair', 'bioguide': 'S001193'}, {'name': 'Terri A. Sewell', 'party': 'majority', 'rank': 2, 'bioguide': 'S001185'}, {'name': 'Jackie Speier', 'party': 'majority', 'rank': 3, 'bioguide': 'S001175'}, {'name': 'Joaquin Castro', 'party': 'majority', 'rank': 4, 'bioguide': 'C001091'}, {'name': 'Val Butler Demings', 'party': 'majority', 'rank': 5, 'bioguide': 'D000627'}, {'name': 'Raja Krishnamoorthi', 'party': 'majority', 'rank': 6, 'bioguide': 'K000391'}, {'name': 'Will Hurd', 'party': 'minority', 'rank': 1, 'title': 'Ranking Member', 'bioguide': 'H001073'}, {'name': 'K. Michael Conaway', 'party': 'minority', 'rank': 2, 'bioguide': 'C001062'}, {'name': 'Elise M. Stefanik', 'party': 'minority', 'rank': 3, 'bioguide': 'S001196'}, {'name': 'John Ratcliffe', 'party': 'minority', 'rank': 4, 'bioguide': 'R000601'}]
+# this is what each entry looks like:
+# 'HLIG08' : [{'name': 'Eric Swalwell', 'party': 'majority', 'rank': 1, 'title': 'Chair', 'bioguide': 'S001193'}...]
 
 """
-Committee acronyms to map:
+Committee acronyms to map to committee names:
 HLIG
 HSAG
 HSAG03
