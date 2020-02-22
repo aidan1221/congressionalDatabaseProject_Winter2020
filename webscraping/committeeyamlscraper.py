@@ -2,6 +2,11 @@ import yaml
 
 
 def parse_committee_yaml(file_path):
+    """
+    :param file_path: committee assignment yaml file to parse
+    :return: dictionary that maps committee and subcommittee short name (i.e. 'thomas id') to membership list of rep / senator names
+             dictionary that maps committee and subcommittee short name (i.e. 'thomas id') to leadership list of tuples (name, position)
+    """
     with open(file_path, mode='r') as file:
         committees_list = yaml.load(file, Loader=yaml.FullLoader)
 
@@ -24,6 +29,10 @@ def parse_committee_yaml(file_path):
 
 
 def map_committee_name(file_path):
+    """
+    :param file_path: committee info yaml to parse
+    :return: a dictionary that maps thomas id to committee and subcommittee name
+    """
     with open(file_path, mode='r') as file:
         committees_list = yaml.load(file, Loader=yaml.FullLoader)
     committee_name_map = dict()
@@ -44,8 +53,8 @@ def map_committee_name(file_path):
     return committee_name_map
 
 
-committee_dict_115, committee_leadership_dict_115 = parse_committee_yaml('yaml/115_subcommittees.yaml')
-committee_dict_116, committee_leadership_dict_116 = parse_committee_yaml('yaml/116_subcommittees.yaml')
+committee_dict_115, committee_leadership_dict_115 = parse_committee_yaml('yaml/115_committee_assignments.yaml')
+committee_dict_116, committee_leadership_dict_116 = parse_committee_yaml('yaml/116_committee_assignments.yaml')
 committee_name_map_dict = map_committee_name('yaml/committees.yaml')
 
 # print(committee_dict_115)
