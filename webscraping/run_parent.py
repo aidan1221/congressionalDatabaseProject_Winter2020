@@ -1,19 +1,20 @@
-from datetime import time
-
 from webscraper import Webscraper
 from billscraper import Billscraper
-from committeescraper import Committeescraper
 
 
-# bs = Billscraper("house", 116, True)
-# bs.scrape_bills()
-# bs.close()
+HOUSE = "house"
+SENATE = "senate"
+CONGRESS = [115, 116]
+
+bs = Billscraper(False)
+
+# for num in CONGRESS:
+#     bs.scrape_bills(HOUSE, num)
+#     bs.scrape_bills(SENATE, num)
+#
+# bs.quit_driver()
 
 
-cs = Committeescraper()
-cs.scrape_committees()
-cs.close()
+# bs.scrape_co_sponsors("house", 116)
 
-
-
-time.sleep(10)
+bs.get_cosponsors_new()
