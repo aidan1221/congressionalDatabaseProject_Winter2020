@@ -6,7 +6,7 @@ HOUSE = "house"
 SENATE = "senate"
 CONGRESS = [115, 116]
 
-bs = Billscraper(True)
+bs = Billscraper(False)
 
 # for num in CONGRESS:
 #     bs.scrape_bills(HOUSE, num)
@@ -15,4 +15,6 @@ bs = Billscraper(True)
 # bs.quit_driver()
 
 
-bs.scrape_co_sponsors("house", 116)
+# bs.scrape_co_sponsors("house", 116)
+
+bs.get_cosponsors_new()

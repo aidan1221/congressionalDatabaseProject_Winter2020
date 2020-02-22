@@ -150,6 +150,66 @@ class Billscraper(Webscraper):
             f"len(data_dict['bill_name']) = {len(data_dict['bill_name'])}  -- len(data_dict['co-sponsors']) == {len(data_dict['co-sponsors'])}"
 
 
+    def get_cosponsors_new(self):
+
+        url = "https://www.congress.gov/search?q=%7B%22source%22%3A%5B%22members%22%5D%2C%22chamber%22%3A%22House%22%2C%22congress%22%3A%22116%22%7D&s=5&searchResultViewType=expanded&KWICView=false&pageSize=250&page=1"
+
+        self.open_url(url)
+
+        num_rep_pages = self.get_number_of_search_pages()
+
+        data_dict = self.build_data_dict(["representative_cosponsor", "bill_name"])
+
+        for i in range(num_rep_pages):
+
+            reps = self.find_elements_by_css("li span > a")
+
+            for i in range(1, len(reps) + 1, 2):
+
+                rep = self.find_element_by_css(f"li:nth-of-type({i}) span > a")
+                rep_name = rep.text
+
+                rep.click()
+                self.find_element_by_css("#facetItemsponsorshipCosponsored_Legislation").click()
+                self.wait_for_page_loaded()
+                self.find_element_by_css("#facetItemcongress116__2019_2020_").click()
+                self.wait_for_page_loaded()
+                self.find_element_by_css("#button_type").click()
+                self.wait_for_page_loaded()
+                self.wait(2)
+                self.find_element_by_css("#facetItemtypeBills__H_R__or_S__").click()
+
+                self.wait_for_page_loaded()
+
+                num_pages = self.get_number_of_search_pages()
+
+                for a in range(num_pages):
+
+                    soup = self.get_html_soup()
+
+                    bills = soup.findAll('li', attrs={'class': 'expanded'})
+
+                    for bill in bills:
+                        try:
+
+                            for item in bill.findAll('span', attrs={'class': 'result-heading'}):
+                                name = item.find('a').text
+
+                        except Exception as err:
+                            self.log_error(err)
+                            continue
+
+                        data_dict["representative_cosponsor"].append(rep_name)
+                        data_dict["bill_name"].append(name)
+
+                    self.click_to_next_page(a + 1, num_pages)
+
+                self.find_element_by_css("#content > div.featured > nav > div.pn-count-container > a").click()
+
+            self.click_to_next_page(i + 1, num_rep_pages)
+
+        self.csv_from_dict("hr_cosponsors_116.csv", data_dict)
+
     def get_current_bills_page(self, current_page, current_bills_url):
 
         self.log(f"Getting current page of search - PAGE {current_page}")
