@@ -29,18 +29,19 @@ class Rollcallscraper(Webscraper):
         self.roll_call_dict = self.build_data_dict(['session', 'roll_num', 'date', 'issue', 'question', 'result', 'title'])
 
     def roll_call_scrape(self):
+        votes_list = []
         #call for each house URL
         for SESSION in self.HOUSE_URLS_LIST:
             session_number=115
             for HOUSE_URL in SESSION:
                 self.open_url(HOUSE_URL)
-                self.get_page_data(HOUSE_URL,session_number)
-                self.create_csv_summary(session_number)
+                self.get_page_data(HOUSE_URL,session_number, votes_list)
                 session_number+=1
-        csv_file = "house_roll_call.csv"
-        self.csv_from_dict(csv_file, self.roll_call_dict)
+        roll_call_csv_file = "house_roll_call.csv"
+        self.csv_from_dict(roll_call_csv_file, self.roll_call_dict)
+        # TODO: convert list of tuples to csv
 
-    def get_page_data(self, HOUSE_URL,session_number):
+    def get_page_data(self, HOUSE_URL,session_number, votes_list):
         """parses beautiful soup object of current page's html for desired roll call page"""
         roll_call_links=self.find_elements_by_css('body>font>a')
         self.log(roll_call_links)
@@ -66,82 +67,39 @@ class Rollcallscraper(Webscraper):
                 self.log("clicking on votes_link")
                 self.open_url(votes_url_list[i])
                 ##TODO add scraper for votes page
-                self.scrape_votes_page(session_number)
+                self.scrape_votes_page(session_number, votes_list)
             self.open_url(startingpage)
 
-    def scrape_votes_page(self,session_number):
+    def scrape_votes_page(self, session_number, votes_list):
         self.log("bill number " + str(session_number))
         soup = self.get_html_soup()
         bill_number = soup.select_one('b:nth-of-type(2)').text
-        self.log("bill number "+bill_number)
+        self.log("bill number " + bill_number)
         count_of_tables = len(soup.select('table'))
-        self.log("tables_length: "+str(count_of_tables))
-        vote =[]
-        for i in range(3,count_of_tables+2):
-            vote_value=(soup.select_one(f'body>center:nth-of-type({i})'))
-            vote_value=str(vote_value)
-            self.log("vote_value stringified: "+vote_value)
-            vote_value=vote_value[32:40]
-            self.log("vote_value after slice: "+vote_value)
-            vote.append(vote_value)
-        voter =[] # the legislator who voted for this
-        for i in range(1,count_of_tables):
-            self.log("getting table")
-            table = (soup.select_one(f'body>table:nth-of-type({i})'))
-            self.log("table gotten:" )
-            self.log(table)
-            table_data=table.find_all('td')
-            self.log("table data: ")
-            self.log(table_data)
+        # self.log("tables_length: " + str(count_of_tables))
+        for i in range(3, count_of_tables + 2):
+            vote_value = (soup.select_one(f'body>center:nth-of-type({i})'))
+            vote_value = str(vote_value)
+            # self.log("vote_value stringified: " + vote_value)
+            vote_value = vote_value[32:40]
+            # self.log("vote_value after slice: " + vote_value)
+            # self.log("getting table")
+            table = (soup.select_one(f'body>table:nth-of-type({i-2})'))
+            # self.log("table gotten:" )
+            # self.log(table)
+            table_data = table.find_all('td')
             table_data = str(table_data)
-            table_data = table_data.replace('<td valign="top" width="33.3%">','')
-            table_data = table_data.replace('</td>','')
-            table_data = table_data.replace('<i>','')
-            table_data = table_data.replace('</i>','')
-            table_data = table_data.replace('<br/>',', ')
-            self.log("table_data after replace:")
-            self.log(table_data)
-            legislators = [i in table_data]
-            self.log("legislators: ")
-            self.log(legislators)
-
-    def scrape_votes_page(self,session_number):
-        soup = self.get_html_soup()
-        bill_number = soup.select_one('b:nth-of-type(2)').text
-        #self.log("bill number"+bill_number)
-        count_of_tables = len(soup.select('table'))
-        self.log("tables_length: "+str(count_of_tables))
-        vote =[]
-        for i in range(3,count_of_tables+2):
-            vote_value=(soup.select_one(f'body>center:nth-of-type({i})'))
-            vote_value=str(vote_value)
-            #self.log("vote_value stringified: "+vote_value)
-            vote_value=vote_value[32:40]
-            #self.log("vote_value after slice: "+vote_value)
-            vote.append(vote_value)
-        voter =[] # the legislator who voted for this
-        for i in range(1,count_of_tables):
-            self.log("getting table")
-            table = (soup.select_one(f'body>table:nth-of-type({i})'))
-            #self.log("table gotten:" )
-            #self.log(table)
-            table_data=table.find_all('td')
-            self.log("table data: ")
-            self.log(table_data)
-            table_data = str(table_data)
-            table_data = table_data.replace('<td valign="top" width="33.3%">','')
-            table_data = table_data.replace('</td>','')
-            table_data = table_data.replace('<i>','')
-            table_data = table_data.replace('</i>','')
-            table_data = table_data.replace('<br/>',', ')
-            self.log("table_data after replace:")
-            self.log(table_data)
-            #legislators = [i in table_data]
-            #self.log("legislators: ")
-            #self.log(legislators)
-
-
-
+            table_data = table_data.replace('<td valign="top" width="33.3%">', '')
+            table_data = table_data.replace('</td>', '')
+            table_data = table_data.replace('<i>', '')
+            table_data = table_data.replace('</i>', '')
+            table_data = table_data.replace('<br/>', ', ')
+            table_data = table_data.replace('\n', '')
+            table_data = table_data.replace('[', '')
+            table_data = table_data.replace(']', '')
+            member_list = table_data.split(',')
+            for member in member_list:
+                votes_list.append((session_number, bill_number, vote_value, member))
 
     def scrape_roll_call_nav(self,session_number):
         soup = self.get_html_soup()
