@@ -76,9 +76,62 @@ class Rollcallscraper(Webscraper):
             self.log("clicking on link")
             link.click()
             self.wait(5)
-            self.scrape_roll_call_nav(session_number)
+            votes_links=self.scrape_roll_call_nav(session_number)#scrapes, creates and returns list of links from page
+            ##OPEN each roll_call_votes page
+            self.log("getting length of votes_link")
+            self.log(votes_links)
+            votes_url_list = []
+            for i in votes_links:
+                entry_string = str(i)
+                self.log(entry_string)
+                test_string = entry_string.replace('&amp;','&')
+                votes_url_list.append(test_string[9:-9])
+
+            #self.log(votes_url_list)
+            for i in range(0,len(votes_url_list)):#0th row is header
+                self.log("clicking on votes_link")
+                self.open_url(votes_url_list[i])
+                ##TODO add scraper for votes page
+                self.scrape_votes_page(session_number)
             self.open_url(startingpage)
-        #self.DRIVER.close()
+
+    def scrape_votes_page(self,session_number):
+        soup = self.get_html_soup()
+        bill_number = soup.select_one('b:nth-of-type(2)').text
+        #self.log("bill number"+bill_number)
+        count_of_tables = len(soup.select('table'))
+        self.log("tables_length: "+str(count_of_tables))
+        vote =[]
+        for i in range(3,count_of_tables+2):
+            vote_value=(soup.select_one(f'body>center:nth-of-type({i})'))
+            vote_value=str(vote_value)
+            #self.log("vote_value stringified: "+vote_value)
+            vote_value=vote_value[32:40]
+            #self.log("vote_value after slice: "+vote_value)
+            vote.append(vote_value)
+        voter =[] # the legislator who voted for this
+        for i in range(1,count_of_tables):
+            self.log("getting table")
+            table = (soup.select_one(f'body>table:nth-of-type({i})'))
+            #self.log("table gotten:" )
+            #self.log(table)
+            table_data=table.find_all('td')
+            self.log("table data: ")
+            self.log(table_data)
+            table_data = str(table_data)
+            table_data = table_data.replace('<td valign="top" width="33.3%">','')
+            table_data = table_data.replace('</td>','')
+            table_data = table_data.replace('<i>','')
+            table_data = table_data.replace('</i>','')
+            table_data = table_data.replace('<br/>',', ')
+            self.log("table_data after replace:")
+            self.log(table_data)
+            #legislators = [i in table_data]
+            #self.log("legislators: ")
+            #self.log(legislators)
+
+
+
 
     def scrape_roll_call_nav(self,session_number):
         soup = self.get_html_soup()
@@ -96,8 +149,11 @@ class Rollcallscraper(Webscraper):
                 self.roll_call_dict["question"].append(row[3])
                 self.roll_call_dict["result"].append(row[4])
                 self.roll_call_dict["title"].append(row[5])
-        # self.log(self.roll_call_dict)
-
+        #self.log(self.roll_call_dict)
+        votes_links =[]
+        votes_links= soup.select('a[href*="http://clerk"]')
+        self.log(votes_links)
+        return votes_links
 
     def get_roll_call_data(self,rollCallPages):
         """gets roll call data from roll call summary page, after you click into the page"""
