@@ -67,6 +67,8 @@ class CSV_Editor:
                     new_list.append(string_split[0])
                     new_list.append(string_split[1][:-1])
 
+                    string_split = new_list.copy()
+
                 if len(string_split) == 4:
                     if 'IV' in string_split:
                         new_list = list()
@@ -180,4 +182,62 @@ class CSV_Editor:
                     if state.lower() != item:
                         return item.upper()
 
+
+    @staticmethod
+    def clean_bills_names(csv_file, chamber, year):
+        if chamber == 'house':
+            ref_file = f"../csv_data/house_reps_{year}.csv"
+        else:
+            ref_file = f"../csv_data/senators_{year}.csv"
+
+        ref_df = pd.read_csv(ref_file)
+        names = ref_df['Name']
+
+        bill_file = pd.read_csv(csv_file)
+
+        correct_matches = dict()
+
+        for _, row in bill_file.iterrows():
+            name_split = str(row['sponsors']).split()
+
+            new_split = list()
+            for part in name_split:
+                if 'Rep.' not in part and '[' not in part and ']' not in part:
+                    if ',' in part:
+                        new_split.append(part[:-1])
+                    else:
+                        new_split.append(part)
+            name_split = new_split.copy()
+            print(name_split)
+            possible_matches = list()
+            for n in names:
+                match_count = 0
+                for part in name_split:
+                    if part in n:
+                        match_count += 1
+                if match_count > 1:
+                    possible_matches.append(n)
+            if len(possible_matches) > 1:
+                try:
+                    correct_name = correct_matches[row['sponsors']]
+                    print(f"replacing {row['sponsors']} with {correct_name}")
+                    row['sponsors'] = correct_name
+
+                except:
+                    for poss in possible_matches:
+                        print("correct(?): " + poss)
+                        print("to be replaced: " + ' '.join(name_split))
+                        answer = input('Replace with correct?\n>')
+                        if answer == 'y':
+
+                            correct_matches[row['sponsors']] = poss
+                            row['sponsors'] = poss
+                            break
+            elif len(possible_matches) == 1:
+                print(f"replacing {row['sponsors']} with {possible_matches[0]}")
+                row['sponsors'] = possible_matches[0]
+            else:
+                input(f"NO MATCHES FOUND for {' '.join(name_split)}")
+
+        bill_file.to_csv(csv_file, index=False, encoding='utf-8')
 
