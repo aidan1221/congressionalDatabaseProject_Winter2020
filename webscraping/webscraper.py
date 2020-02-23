@@ -186,6 +186,16 @@ class Webscraper(object):
 
         data_frame.to_csv(file_path, index=False, encoding="utf-8")
 
+    def csv_from_tuple_list(self, file_name, list, columns):
+        """ Writes list of tuples to csv file with given filename """
+
+        file_path = './csv_data/' + file_name
+
+        self.log(f"Creating csv from list of tuples -- {file_path}")
+        data_frame = pd.DataFrame(list, columns=columns)
+        data_frame.to_csv(file_path, index=False, encoding="utf-8")
+
+
     # ========================
     # Console Logger
     # ========================

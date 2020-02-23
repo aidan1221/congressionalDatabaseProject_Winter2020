@@ -132,6 +132,8 @@
     thomas_id: '26'
     address: 2340 RHOB; Washington, DC 20515
     phone: (202) 226-2843
+  - name: Oversight and Investigations
+    thomas_id: '06'
   address: 2216 RHOB; Washington, DC 20515-6035
   phone: (202) 225-4151
   jurisdiction: The House Committee on Armed Services has legislative jurisdiction
@@ -168,6 +170,8 @@
     thomas_id: '13'
     address: 2129 RHOB; Washington, DC 20515
     phone: (202) 225-4247
+  - name: Monetary Policy and Trade
+    thomas_id: '20'
   address: 2129 RHOB; Washington, DC 20515-6050
   phone: (202) 225-4247
   jurisdiction: The House Financial Services Committee has jurisdiction over issues
@@ -260,6 +264,8 @@
     thomas_id: '17'
     address: 2170 RHOB; Washington, DC 20515
     phone: (202) 225-5021
+  - name: Oversight and Investigations
+    thomas_id: '18'
   address: 2170 RHOB; Washington, DC 20515-6128
   phone: (202) 225-5021
   jurisdiction: The House Committee on Foreign Affairs considers legislation that
@@ -1099,6 +1105,16 @@
     name: Security
   - thomas_id: '32'
     name: Transportation and Safety
+  - thomas_id: '01'
+    name: Aviation Operations, Safety, and Security Subcommittee
+  - thomas_id: '20'
+    name: Consumer Protection, Product Safety, Insurance, and Data Security
+  - thomas_id: '22'
+    name: Oceans, Atmosphere, Fisheries, and Coast Guard Subcommittee
+  - thomas_id: '24'
+    name: Space, Science, and Competitiveness Subcommittee
+  - thomas_id: '25'
+    name: Surface Transportation and Merchant Marine Infrastructure, Safety and Security
   wikipedia: United States Senate Committee on Commerce, Science and Transportation
   jurisdiction: The Senate Committee on Commerce, Science, and Transportation has
     legislative jurisdiction on matters related to science and technology, oceans
@@ -1342,6 +1358,8 @@
     name: Oversight, Agency Action, Federal Rights and Federal Courts
   - thomas_id: '26'
     name: Intellectual Property
+  - thomas_id: '23'
+    name: Privacy, Technology and the Law Subcommittee
   wikipedia: United States Senate Committee on the Judiciary
   jurisdiction: The Senate Committee on the Judiciary provides oversight of the Department
     of Justice and the agencies under the Department's jurisdiction, including the
