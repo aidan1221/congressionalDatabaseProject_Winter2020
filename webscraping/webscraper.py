@@ -3,6 +3,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup
 import time
 import csv
@@ -17,7 +18,7 @@ class Webscraper(object):
     # Common params
     CSS_SELECTOR = By.CSS_SELECTOR
 
-    def __init__(self, headless=True, verbose=True):
+    def __init__(self, headless=False, verbose=True):
         # if headless == True -> run chromedriver headless
         if headless:
             chrome_options = Options()
@@ -59,12 +60,12 @@ class Webscraper(object):
         return self.DRIVER.find_element_by_css_selector(css_selector)
 
     def find_elements_by_css(self, css_selector):
-        """ Finds elements by given CSS selector
+        """ Finds list of elements by given CSS selector
 
-                    css_selector -- CSS selector used to find element
-                """
+            css_selector -- CSS selector used to find elements
+        """
 
-        self.log(f"Finding element by CSS - {css_selector}")
+        self.log(f"Finding all elements by CSS - {css_selector}")
 
         return self.DRIVER.find_elements_by_css_selector(css_selector)
 
@@ -185,6 +186,16 @@ class Webscraper(object):
         data_frame = pd.DataFrame.from_dict(dict)
 
         data_frame.to_csv(file_path, index=False, encoding="utf-8")
+
+    def csv_from_tuple_list(self, file_name, list, columns):
+        """ Writes list of tuples to csv file with given filename """
+
+        file_path = './csv_data/' + file_name
+
+        self.log(f"Creating csv from list of tuples -- {file_path}")
+        data_frame = pd.DataFrame(list, columns=columns)
+        data_frame.to_csv(file_path, index=False, encoding="utf-8")
+
 
     # ========================
     # Console Logger
