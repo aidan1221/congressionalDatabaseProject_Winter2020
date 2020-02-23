@@ -11,13 +11,13 @@ import pandas as pd
 
 class Webscraper(object):
 
-    DRIVER = webdriver.Chrome("./chromedriver.exe")
+    DRIVER = webdriver.Chrome("./chromedriver78")
     VERBOSE = True
 
     # Common params
     CSS_SELECTOR = By.CSS_SELECTOR
 
-    def __init__(self, headless=False, verbose=True):
+    def __init__(self, headless=True, verbose=True):
         # if headless == True -> run chromedriver headless
         if headless:
             chrome_options = Options()

@@ -30,7 +30,6 @@ class Rollcallscraper(Webscraper):
 
     def roll_call_scrape(self):
         #call for each house URL
-
         for SESSION in self.HOUSE_URLS_LIST:
             session_number=115
             for HOUSE_URL in SESSION:
@@ -40,31 +39,6 @@ class Rollcallscraper(Webscraper):
                 session_number+=1
         csv_file = "house_roll_call.csv"
         self.csv_from_dict(csv_file, self.roll_call_dict)
-        """
-        for HOUSE_URL in self.HOUSE_URLS_115:
-            self.log("opening page:i")
-            self.log(i)
-            i+=1
-            self.open_url(HOUSE_URL)
-            self.get_page_data(HOUSE_URL)
-        #self.log(self.roll_call_dict)
-        self.log("creating csv")
-        self.create_csv_summary('115')
-
-        #clear the dictionary for the next session's data
-        self.roll_call_dict = self.build_data_dict(['roll#','date','issue','question','result','title'])
-        #self.roll_call_dict = dict((k,None)for k in self.roll_call_dict)
-        self.log(self.roll_call_dict)
-        for HOUSE_URL in self.HOUSE_URLS_116:
-            self.open_url(HOUSE_URL)
-            self.get_page_data(HOUSE_URL)
-        #self.log(self.roll_call_dict)
-        self.log("creating csv")
-        self.create_csv_summary('116')
-        """
-
-        #call for each senate URL
-
 
     def get_page_data(self, HOUSE_URL,session_number):
         """parses beautiful soup object of current page's html for desired roll call page"""
@@ -94,6 +68,42 @@ class Rollcallscraper(Webscraper):
                 ##TODO add scraper for votes page
                 self.scrape_votes_page(session_number)
             self.open_url(startingpage)
+
+    def scrape_votes_page(self,session_number):
+        self.log("bill number " + str(session_number))
+        soup = self.get_html_soup()
+        bill_number = soup.select_one('b:nth-of-type(2)').text
+        self.log("bill number "+bill_number)
+        count_of_tables = len(soup.select('table'))
+        self.log("tables_length: "+str(count_of_tables))
+        vote =[]
+        for i in range(3,count_of_tables+2):
+            vote_value=(soup.select_one(f'body>center:nth-of-type({i})'))
+            vote_value=str(vote_value)
+            self.log("vote_value stringified: "+vote_value)
+            vote_value=vote_value[32:40]
+            self.log("vote_value after slice: "+vote_value)
+            vote.append(vote_value)
+        voter =[] # the legislator who voted for this
+        for i in range(1,count_of_tables):
+            self.log("getting table")
+            table = (soup.select_one(f'body>table:nth-of-type({i})'))
+            self.log("table gotten:" )
+            self.log(table)
+            table_data=table.find_all('td')
+            self.log("table data: ")
+            self.log(table_data)
+            table_data = str(table_data)
+            table_data = table_data.replace('<td valign="top" width="33.3%">','')
+            table_data = table_data.replace('</td>','')
+            table_data = table_data.replace('<i>','')
+            table_data = table_data.replace('</i>','')
+            table_data = table_data.replace('<br/>',', ')
+            self.log("table_data after replace:")
+            self.log(table_data)
+            legislators = [i in table_data]
+            self.log("legislators: ")
+            self.log(legislators)
 
     def scrape_votes_page(self,session_number):
         soup = self.get_html_soup()
@@ -149,11 +159,12 @@ class Rollcallscraper(Webscraper):
                 self.roll_call_dict["question"].append(row[3])
                 self.roll_call_dict["result"].append(row[4])
                 self.roll_call_dict["title"].append(row[5])
-        #self.log(self.roll_call_dict)
-        votes_links =[]
-        votes_links= soup.select('a[href*="http://clerk"]')
+        # self.log(self.roll_call_dict)
+        votes_links = []
+        votes_links = soup.select('a[href*="http://clerk"]')
         self.log(votes_links)
         return votes_links
+
 
     def get_roll_call_data(self,rollCallPages):
         """gets roll call data from roll call summary page, after you click into the page"""
