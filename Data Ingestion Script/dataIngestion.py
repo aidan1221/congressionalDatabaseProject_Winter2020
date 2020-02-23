@@ -335,7 +335,7 @@ def insert_house_bills():
                 VALUES
                 (
                 '%s', '%s', '%s', '%s', '%s')
-                """ %(row['hrname'].strip(), row['sponsor'].strip(), row['committees'].strip()), row['status'].strip(), row['description'].strip())
+                """ % (row['hrname'].strip(), row['sponsor'].strip(), row['committees'].strip()), row['status'].strip(), row['description'].strip())
         connection.commit()
         print("Data from House Bills successfully inserted")
     except pg.OperationalError as err:
@@ -403,14 +403,14 @@ def add_committee_members_and_subcommitees_tables():
             (
             '%s', '%s', 'no', 'no'
             )
-            """ % (row['rname'], row['hcname'])) # need to insert yes/no for chair and ranking member
+            """ % (row['rname'], row['hcname']))  # need to insert yes/no for chair and ranking member
 
             for index, row in subcommittees.iterrows():
 
                 if '"' in row['hsubc_name']:
                     row['hsubc_name'] = row['hsubc_name'][1:-1]
 
-                if '"' in row ['hc_name']:
+                if '"' in row['hc_name']:
                     row['hc_name'] = row['hc_name'][1:-1]
 
                 curs.execute("""
