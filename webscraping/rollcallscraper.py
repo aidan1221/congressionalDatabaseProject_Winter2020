@@ -23,10 +23,10 @@ class Rollcallscraper(Webscraper):
     SENATE_115_2 = "https://www.senate.gov/legislative/LIS/roll_call_lists/vote_menu_115_2.htm"
 
     """ Initialize RollCallScraper"""
-    def __init__(self, headless=False, verbose=True):
+    def __init__(self, headless=True, verbose=True):
         super().__init__(headless,verbose)
         self.bill_count =0
-        self.roll_call_dict = self.build_data_dict(['session','roll#','date','issue','question','result','title'])
+        self.roll_call_dict = self.build_data_dict(['session', 'roll_num', 'date', 'issue', 'question', 'result', 'title'])
 
     def roll_call_scrape(self):
         #call for each house URL
@@ -38,7 +38,8 @@ class Rollcallscraper(Webscraper):
                 self.get_page_data(HOUSE_URL,session_number)
                 self.create_csv_summary(session_number)
                 session_number+=1
-                self.roll_call_dict = self.build_data_dict(['session','roll#','date','issue','question','result','title'])
+        csv_file = "house_roll_call.csv"
+        self.csv_from_dict(csv_file, self.roll_call_dict)
         """
         for HOUSE_URL in self.HOUSE_URLS_115:
             self.log("opening page:i")
@@ -64,14 +65,6 @@ class Rollcallscraper(Webscraper):
 
         #call for each senate URL
 
-    def create_csv_summary(self,congress):
-        csv_file = str(congress)+"roll_call_summary"
-        try:
-            with open(csv_file, 'w') as csvfile:
-                for key in self.roll_call_dict.keys():
-                    csvfile.write("%s,%s\n"%(key,self.roll_call_dict[key]))
-        except IOError:
-            print("I/O error with CSV creation")
 
     def get_page_data(self, HOUSE_URL,session_number):
         """parses beautiful soup object of current page's html for desired roll call page"""
@@ -97,15 +90,13 @@ class Rollcallscraper(Webscraper):
             # self.log(row)
             if row:
                 self.roll_call_dict["session"].append(session_number)
-                self.roll_call_dict["roll#"].append(row[0])
+                self.roll_call_dict["roll_num"].append(row[0])
                 self.roll_call_dict["date"].append(row[1])
                 self.roll_call_dict["issue"].append(row[2])
                 self.roll_call_dict["question"].append(row[3])
                 self.roll_call_dict["result"].append(row[4])
                 self.roll_call_dict["title"].append(row[5])
-        #self.log(self.roll_call_dict)
-
-
+        # self.log(self.roll_call_dict)
 
 
     def get_roll_call_data(self,rollCallPages):
