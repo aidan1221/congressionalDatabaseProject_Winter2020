@@ -51,13 +51,14 @@ def create_rep_table():
 
     try:
         curs.execute("""
-                CREATE TABLE representative (
+                CREATE TABLE IF NOT EXISTS representative (
                 rep_name varchar(255) UNIQUE NOT NULL,
                 state varchar(255),
-                district integer,
+                district varchar(255),
                 party varchar(255),
-                address varchar(255),
-                PRIMARY KEY (rep_name, state)
+                terms varchar(255),
+                congress integer,
+                PRIMARY KEY (rep_name, state, congress)
                 );
         """)
         curs.execute("""
@@ -74,7 +75,7 @@ def create_house_resolution():
 
     try:
         curs.execute("""
-                CREATE TABLE house_resolution (
+                CREATE TABLE IF NOT EXISTS house_resolution (
                 res_name varchar(255) PRIMARY KEY NOT NULL,
                 sponsor varchar(255) REFERENCES representative(rep_name),
                 committees varchar(255),
@@ -96,7 +97,7 @@ def create_house_committee_table():
 
     try:
         curs.execute("""
-                CREATE TABLE house_committee (
+                CREATE TABLE IF NOT EXISTS house_committee (
                 hc_name varchar(255) UNIQUE NOT NULL,
                 chair varchar(255) NOT NULL REFERENCES representative(rep_name),
                 ranking_member varchar(255) REFERENCES representative(rep_name),
@@ -117,7 +118,7 @@ def create_house_subcommittee_table():
 
     try:
         curs.execute("""
-                CREATE TABLE house_subcommittee (
+                CREATE TABLE IF NOT EXISTS house_subcommittee (
                 hsubc_name varchar(255) NOT NULL,
                 sc_of varchar(255) REFERENCES house_committee(hc_name),
                 PRIMARY KEY (hsubc_name, sc_of)
@@ -137,7 +138,7 @@ def create_house_committee_relational_table():
 
     try:
         curs.execute("""
-                CREATE TABLE house_com_rel (
+                CREATE TABLE IF NOT EXISTS house_com_rel (
                 rep_name varchar(255) REFERENCES representative(rep_name),
                 hc_name varchar(255) REFERENCES house_committee(hc_name),
                 chair varchar(3),
@@ -160,7 +161,7 @@ def create_res_cosponsors_table():
 
     try:
         curs.execute("""
-                CREATE TABLE res_cosponsors (
+                CREATE TABLE IF NOT EXISTS res_cosponsors (
                 res_name varchar(255) NOT NULL REFERENCES house_resolution(res_name),
                 cosponsor varchar(255) REFERENCES representative(rep_name),
                 PRIMARY KEY (res_name, cosponsor)
@@ -180,11 +181,13 @@ def create_sen_table():
 
     try:
         curs.execute("""
-                CREATE TABLE senator (
-                sen_name varchar(255) UNIQUE PRIMARY KEY NOT NULL,
+                CREATE TABLE IF NOT EXISTS senator (
+                sen_name varchar(255) UNIQUE NOT NULL,
                 state varchar (255),
                 party varchar(255),
-                address varchar(255)
+                terms varchar(255),
+                congress integer,
+                PRIMARY KEY (sen_name, state, congress)
                 );
         """)
         curs.execute("""
@@ -201,7 +204,7 @@ def create_senate_bill_table():
 
     try:
         curs.execute("""
-                CREATE TABLE senate_bill(
+                CREATE TABLE IF NOT EXISTS senate_bill(
                 bill_name varchar(255) UNIQUE PRIMARY KEY NOT NULL,
                 sponsor varchar(255) REFERENCES senator(sen_name),
                 committees varchar(255),
@@ -223,7 +226,7 @@ def create_senate_committee_table():
 
     try:
         curs.execute("""
-                CREATE TABLE senate_committee (
+                CREATE TABLE IF NOT EXISTS senate_committee (
                 sc_name varchar(255) NOT NULL,
                 chair varchar(255) NOT NULL REFERENCES senator(sen_name),
                 ranking_member varchar(255) REFERENCES senator(sen_name),
@@ -244,7 +247,7 @@ def create_senate_subcommittee_table():
 
     try:
         curs.execute("""
-                CREATE TABLE senate_subcommittee (
+                CREATE TABLE IF NOT EXISTS senate_subcommittee (
                 ssubc_name varchar(255) NOT NULL,
                 sc_of varchar(255) REFERENCES senate_committee(sc_name),
                 PRIMARY KEY (ssubc_name, sc_of)
@@ -264,7 +267,7 @@ def create_senate_com_rel_table():
 
     try:
         curs.execute("""
-                CREATE TABLE senate_com_rel (
+                CREATE TABLE IF NOT EXISTS senate_com_rel (
                 sen_name varchar(255) REFERENCES senator(sen_name),
                 sc_name varchar(255) REFERENCES senate_committee(sc_name),
                 chair varchar(3),
@@ -287,7 +290,7 @@ def create_sen_bill_cosponsors_table():
 
     try:
         curs.execute("""
-                CREATE TABLE bill_cosponsors (
+                CREATE TABLE IF NOT EXISTS bill_cosponsors (
                 bill_name varchar(255) NOT NULL REFERENCES senate_bill(bill_name),
                 cosponsor varchar(255) NOT NULL REFERENCES senator(sen_name),
                 PRIMARY KEY (bill_name, cosponsor)
@@ -301,17 +304,82 @@ def create_sen_bill_cosponsors_table():
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
 
-def insert_reps():
+def fix_reps_115_csv():
+    reps = csv.reader(open('..\webscraping\csv_data\house_reps_115 - Copy.csv'))
+    lines = list(reps)
+
+    for line in lines:
+        print(line)
+        if line[0] == 'Madeleine Z. Bordallo':
+            line[1] = 'GU'
+        elif line[0] == 'Jenniffer Gonzalez-Colon':
+            line[1] = 'PR'
+        elif line[0] == 'Eleanor Holmes Norton':
+            line[1] = 'DC'
+        elif line[0] == 'Stacey E. Plaskett':
+            line[1] = 'VI'
+        elif line[0] == 'Aumua Amata Coleman Radewagen':
+            line[1] = 'AS'
+        elif line[0] == 'Gregorio Kilili Camacho Sablan':
+            line[1] = 'MP'
+        elif line[0] == 'Tom O\'Halleran':
+            line[0] = 'Tom O''Halleran'
+        elif line[0] == 'Beto O\'Rourke':
+            line[0] = 'Beto O''Rourke'
+        else:
+            pass
+
+    for line in lines:
+        print(line)
+        if line[2] == 'At Large':
+            line[2] = '\'At Large\''
+        elif line[2] != 'District':
+            line[2] = ''.join(line[2].split())[:-2]
+        print(line[2])
+
+    writer = csv.writer(open('..\webscraping\csv_data\house_reps_115.csv', 'w'))
+    writer.writerows(lines)
+
+
+def insert_reps_115():
     try:
-        reps = pd.read_csv('representative.csv')
+        reps = pd.read_csv('..\webscraping\csv_data\house_reps_115.csv')
         curs = connection.cursor()
-        print("Loading Data from representative.csv")
+        print("Loading Data from house_reps_115.csv")
+        n = 0
+        for index, row in reps.iterrows():
+            for index, row in reps.iterrows():
+                print("Name is type", type(row['Name']), "and Name is:", row["Name"])
+                print("State is type ", type(row['State']), "and State is", row["State"])
+                print("District is type", type(row['District']))
+                print("Party is type", type(row['Party']))
+                print("Terms is type", type([row['Terms']]))
+                n += 1
+                print(n)
+                curs.execute("""
+                INSERT into representative(rep_name, state, district, party, terms, congress)
+                VALUES (
+                    '%s', '%s', %s, '%s', '%s', 115
+                )""" % (row['Name'].strip(), row['State'].strip(), row['District'], row['Party'].strip(),
+                        row['Terms'].strip())
+                             )
+
+        connection.commit()
+        print("Data from Representative.csv successfully inserted.")
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+def insert_reps_116():
+    try:
+        reps = pd.read_csv('..\webscraping\csv_data\house_reps_116.csv')
+        curs = connection.cursor()
+        print("Loading Data from house_reps_116.csv")
         for index, row in reps.iterrows():
             curs.execute("""
-            INSERT into congressionalscrapings.representative(rep_name, state, district, party, address)
+            INSERT into representative(rep_name, state, district, party, terms, congress)
             VALUES (
-                '%s', '%s', %d, '%s', '%s'
-            )"""(row['rep_name'].strip(), row['state'].strip(), int(row['district']), row['party'].strip(), row['address'].strip())
+                '%s', '%s', %s, '%s', '%s', 116
+            )""" % (row['Name'].strip(), row['State'].strip(), row['District'], row['Party'].strip(), row['Terms'].strip())
             )
 
         connection.commit()
@@ -331,7 +399,7 @@ def insert_house_bills():
         for index, row in bills.iterrows():
             if row['sponsor'] in rep_names:
                 curs.execute("""
-                INSERT into congressionalscrapings.representative(res_name, sponsor, committees, status, description)
+                INSERT into congresql.representative(res_name, sponsor, committees, status, description)
                 VALUES
                 (
                 '%s', '%s', '%s', '%s', '%s')
@@ -426,19 +494,21 @@ def add_committee_members_and_subcommitees_tables():
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
 
-create_rep_table()
-create_house_committee_table()
-create_house_subcommittee_table()
-create_house_committee_relational_table()
-create_house_resolution()
+# create_rep_table()
+# create_house_committee_table()
+# create_house_subcommittee_table()
+# create_house_committee_relational_table()
+# create_house_resolution()
 
-create_sen_table()
-create_senate_committee_table()
-create_senate_subcommittee_table()
-create_senate_com_rel_table()
-create_senate_bill_table()
-create_sen_bill_cosponsors_table()
+# create_sen_table()
+# create_senate_committee_table()
+# create_senate_subcommittee_table()
+# create_senate_com_rel_table()
+# create_senate_bill_table()
+# create_sen_bill_cosponsors_table()
 
-insert_reps()
-insert_house_bills()
-insert_house_committee()
+fix_reps_115_csv()
+insert_reps_115()
+# insert_reps_116()
+# insert_house_bills()
+# insert_house_committee()

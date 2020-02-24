@@ -4,11 +4,12 @@ CREATE DATABASE congressionalscrapings owner postgres;
 
 DROP TABLE if exists representative;
 CREATE TABLE representative (
-    rep_name varchar(255) NOT NULL,
+    rep_name varchar(255) UNIQUE NOT NULL,
     state varchar(255),
     district integer,
     party varchar(255),
-    address varchar(255),
+    terms varchar(255),
+    congress int,
     PRIMARY KEY (rep_name, state)
 );
 
@@ -67,10 +68,12 @@ ALTER TABLE res_cosponsors OWNER to postgres;
 
 DROP TABLE if exists senator;
 CREATE TABLE senator (
-  sen_name varchar(255) PRIMARY KEY NOT NULL,
+  sen_name varchar(255) UNIQUE NOT NULL,
   state varchar (255),
   party varchar(255),
-  address varchar(255)
+  terms varchar(255),
+  congress int,
+  PRIMARY KEY (senator, state)
 );
 
 ALTER TABLE senator OWNER to postgres;
@@ -88,7 +91,7 @@ ALTER TABLE senate_bill OWNER to postgres;
 
 DROP TABLE if exists senate_committee;
 CREATE TABLE senate_committee (
-    sc_name varchar(255) NOT NULL,
+    sc_name varchar(255) UNIQUE NOT NULL,
     chair varchar(255) NOT NULL REFERENCES senator(sen_name),
     ranking_member varchar(255) REFERENCES senator(sen_name),
     PRIMARY KEY (sc_name, chair)
