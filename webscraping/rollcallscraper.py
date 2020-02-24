@@ -1,6 +1,7 @@
 from webscraper import Webscraper
-import sys
-import csv
+import unidecode as ud
+
+
 ## assert when count is not same as last class when gathering data, ensure descriptive
 ##convert UTF8 to ASCII
 
@@ -100,7 +101,8 @@ class Rollcallscraper(Webscraper):
             table_data = table_data.replace(']', '')
             member_list = table_data.split(',')
             for member in member_list:
-                votes_list.append((session_number, bill_number, vote_value, member))
+                decoded_member = ud.unidecode(member)
+                votes_list.append((session_number, bill_number, vote_value, decoded_member))
 
     def scrape_roll_call_nav(self,session_number):
         soup = self.get_html_soup()
