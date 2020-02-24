@@ -39,7 +39,8 @@ class Rollcallscraper(Webscraper):
                 session_number+=1
         roll_call_csv_file = "house_roll_call.csv"
         self.csv_from_dict(roll_call_csv_file, self.roll_call_dict)
-        # TODO: convert list of tuples to csv
+        roll_call_votes_csv_file = "house_votes.csv"
+        self.csv_from_tuple_list(roll_call_votes_csv_file, votes_list, ['session', 'bill_num', 'vote', 'member'])
 
     def get_page_data(self, HOUSE_URL,session_number, votes_list):
         """parses beautiful soup object of current page's html for desired roll call page"""
@@ -61,17 +62,17 @@ class Rollcallscraper(Webscraper):
                 self.log(entry_string)
                 test_string = entry_string.replace('&amp;','&')
                 votes_url_list.append(test_string[9:-9])
-
-            #self.log(votes_url_list)
             for i in range(0,len(votes_url_list)):#0th row is header
                 self.log("clicking on votes_link")
                 self.open_url(votes_url_list[i])
-                ##TODO add scraper for votes page
-                self.scrape_votes_page(session_number, votes_list)
+                try:
+                    self.scrape_votes_page(session_number, votes_list)
+                except:
+                    pass
             self.open_url(startingpage)
 
     def scrape_votes_page(self, session_number, votes_list):
-        self.log("bill number " + str(session_number))
+        self.log("session number " + str(session_number))
         soup = self.get_html_soup()
         bill_number = soup.select_one('b:nth-of-type(2)').text
         self.log("bill number " + bill_number)
