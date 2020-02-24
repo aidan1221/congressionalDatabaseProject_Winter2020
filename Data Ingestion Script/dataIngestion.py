@@ -346,16 +346,13 @@ def insert_reps_115():
         reps = pd.read_csv('..\webscraping\csv_data\house_reps_115.csv')
         curs = connection.cursor()
         print("Loading Data from house_reps_115.csv")
-        n = 0
         for index, row in reps.iterrows():
             for index, row in reps.iterrows():
-                print("Name is type", type(row['Name']), "and Name is:", row["Name"])
-                print("State is type ", type(row['State']), "and State is", row["State"])
-                print("District is type", type(row['District']))
-                print("Party is type", type(row['Party']))
-                print("Terms is type", type([row['Terms']]))
-                n += 1
-                print(n)
+                print("Reading row", row["Name"])
+                # print("State is type ", type(row['State']), "and State is", row["State"])
+                # print("District is type", type(row['District']))
+                # print("Party is type", type(row['Party']))
+                # print("Terms is type", type([row['Terms']]))
                 curs.execute("""
                 INSERT into representative(rep_name, state, district, party, terms, congress)
                 VALUES (
