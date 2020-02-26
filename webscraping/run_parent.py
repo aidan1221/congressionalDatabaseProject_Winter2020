@@ -1,6 +1,9 @@
 from webscraper import Webscraper
 from billscraper import Billscraper
+from rollcallscraper import Rollcallscraper
 
+RS = Rollcallscraper()
+RS.roll_call_scrape()
 
 HOUSE = "house"
 SENATE = "senate"
@@ -14,6 +17,7 @@ bs = Billscraper(False)
 #
 # bs.quit_driver()
 
+RS.quit_driver()
 
 # bs.scrape_co_sponsors("house", 116)
 
