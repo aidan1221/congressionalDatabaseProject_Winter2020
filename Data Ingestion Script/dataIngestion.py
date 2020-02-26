@@ -101,8 +101,8 @@ def create_house_resolution_115():
                 res_name varchar(255) PRIMARY KEY NOT NULL,
                 description varchar(1000),
                 status varchar(255),
-                committees varchar(255),
-                sponsor varchar(255) REFERENCES representative_115(rep_name),
+                committees varchar(1000),
+                sponsor varchar(255) REFERENCES representative_115 (rep_name),
                 congress integer
                 );
         """)
@@ -124,7 +124,7 @@ def create_house_resolution_116():
                 res_name varchar(255) PRIMARY KEY NOT NULL,
                 description varchar(1000),
                 status varchar(255),
-                committees varchar(255),
+                committees varchar(1000),
                 sponsor varchar(255) REFERENCES representative_116(rep_name),
                 congress integer
                 );
@@ -538,23 +538,47 @@ def insert_house_resolutions_115():
         curs = connection.cursor()
         print("Loading Data from house_resolutions_115.csv")
         for index, row in bills.iterrows():
-            print("Row[names] is", row['names'], "and type is", type(row['names']))
-            print("Row[descriptions] is", row['descriptions'], "and type is", type(row['descriptions']))
-            print("Row[statuses] is", row['statuses'], "and type is", type(row['statuses']))
-            print("Row[bill_committees] is", row['bill_committees'], "and type is", type(row['bill_committees']))
-            print("Row[sponsors] is", row['sponsors'], "and type is", type(row['sponsors']))
             if row['sponsors'] in rep_names:
                 curs.execute("""
-                INSERT into house_resolution_115(res_name, sponsor, committees, status, description, congress)
+                INSERT into house_resolution_115(res_name, description, status, committees, sponsor, congress)
                 VALUES
                 (
                 '%s', '%s', '%s', '%s', '%s', 115)
-                """ % (row['names'].strip(), row['descriptions'].strip(), row['statuses'].strip(), row['bill_committees'].strip(), row['sponsors'].strip()))
+                """ % (row['names'].strip(), row['descriptions'].strip(), row['statuses'].strip(),
+                       row['bill_committees'].strip(), row['sponsors'].strip())
+                )
         connection.commit()
         print("Data from house_resolutions_115.csv successfully inserted")
 
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
+
+def insert_house_resolutions_116():
+    try:
+        bills = pd.read_csv('..\webscraping\csv_data\house_bills_116.csv')
+        reps = pd.read_csv('..\webscraping\csv_data\house_reps_116.csv')
+
+        rep_names = reps['Name'].tolist()
+
+        curs = connection.cursor()
+        print("Loading Data from house_resolutions_116.csv")
+        for index, row in bills.iterrows():
+            if row['sponsors'] in rep_names:
+                curs.execute("""
+                INSERT into house_resolution_116(res_name, description, status, committees, sponsor, congress)
+                VALUES
+                (
+                '%s', '%s', '%s', '%s', '%s', 116)
+                """ % (row['names'].strip(), row['descriptions'].strip(), row['statuses'].strip(),
+                       row['bill_committees'].strip(), row['sponsors'].strip())
+                )
+        connection.commit()
+        print("Data from house_resolutions_116.csv successfully inserted")
+
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+
 
 def insert_house_committee():
     try:
@@ -651,13 +675,13 @@ def insert_sen_115():
     try:
         reps = pd.read_csv('..\webscraping\csv_data\senators_115.csv')
         curs = connection.cursor()
-        print("Loading Data from house_reps_116.csv")
+        print("Loading Data from senators_115.csv")
         for index, row in reps.iterrows():
             print("Inserting row", row["Name"])
             curs.execute("""
             INSERT into senator_115(sen_name, state, party, terms, congress)
             VALUES (
-                '%s', '%s', '%s', '%s', 116
+                '%s', '%s', '%s', '%s', 115
             )""" % (row['Name'].strip(), row['State'].strip(), row['Party'].strip(), row['Terms'].strip())
             )
 
@@ -692,14 +716,15 @@ def insert_sen_116():
 # create_rep_table_116()                        # Created
 # create_house_committee_table_115()            # Created
 # create_house_committee_table_116()            # Created
-create_house_resolution_115()                 # Created
-create_house_resolution_116()                 # Created
+# create_house_resolution_115()                 # Created
+# create_house_resolution_116()                 # Created
 # create_house_subcommittee_table()             # Not Created
 # create_house_committee_relational_table()     # Not Created
 
 # create_sen_table_115()                        # Created
 # create_sen_table_116()                        # Created
-# create_senate_bill_table()                    # Not Created
+# create_senate_bill_table_115()                # Not Created
+# create_senate_bill_table_116()                # Not Created
 # create_senate_committee_table()               # Not Created
 # create_senate_subcommittee_table()            # Not Created
 # create_senate_com_rel_table()                 # Not Created
@@ -709,9 +734,11 @@ create_house_resolution_116()                 # Created
 # fix_reps_116_csv()                            # Executed
 # insert_reps_115()                             # Executed
 # insert_reps_116()                             # Executed
-insert_house_resolutions_115()
-# insert_house_bills_116()
+# insert_house_resolutions_115()                # Executed
+# insert_house_resolutions_116()                # Executed
 # insert_house_committee()
 
 # insert_sen_115()                              # Executed
 # insert_sen_116()                              # Executed
+# insert_sen_bills_115
+# insert_sen_bills_116
