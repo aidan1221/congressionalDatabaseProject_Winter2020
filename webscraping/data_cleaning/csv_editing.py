@@ -255,21 +255,7 @@ class CSV_Editor:
         committee_file = pd.read_csv(csv_file)
 
         for _, row in committee_file.iterrows():
-            # if row['Committee'].find('House') == 0:
-            #     print("HOUSE")
-            #     print(row['Committee'])
-            #     print(row['Committee'].find('House'))
-            # if row['Committee'].find('Senate') == 0:
-            #     print("SENATE")
-            #     print(row['Committee'])
-            #     print(row['Committee'].find('Senate'))
-            #     names = senate_ref_df['Name']
-            # else:
-            #     print("Weird committee name!!! ")
-            #     print(row['Committee'])
-
             name_split = str(row['Name']).split()
-
             new_split = list()
             for part in name_split:
                 if 'Rep.' not in part and '[' not in part and ']' not in part:
@@ -280,7 +266,6 @@ class CSV_Editor:
             name_split = new_split.copy()
             print(name_split)
             possible_matches = list()
-
 
             for n in names:
                 match_count = 0
