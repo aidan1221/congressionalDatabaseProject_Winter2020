@@ -293,24 +293,47 @@ def create_sen_table_116():
         throw_psycopg2_exception(err)
 
 
-def create_senate_bill_table():
+def create_senate_bill_table_115():
     curs = connection.cursor()
 
     try:
         curs.execute("""
-                CREATE TABLE IF NOT EXISTS senate_bill(
+                CREATE TABLE IF NOT EXISTS senate_bill_115(
                 bill_name varchar(255) UNIQUE PRIMARY KEY NOT NULL,
-                sponsor varchar(255) REFERENCES senator(sen_name),
-                committees varchar(255),
+                description varchar(1000),
                 bill_status varchar(255),
-                description varchar(500)
+                committees varchar(1000),
+                sponsor varchar(255) REFERENCES senator_115(sen_name),
+                congress integer
                 );
         """)
         curs.execute("""
-                ALTER TABLE senate_bill OWNER to postgres
+                ALTER TABLE senate_bill_115 OWNER to postgres
         """)
         connection.commit()
-        print("Operation succeeded - Senate Bill table created")
+        print("Operation succeeded - Senate Bill table for 115th session created")
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+
+def create_senate_bill_table_116():
+    curs = connection.cursor()
+
+    try:
+        curs.execute("""
+                CREATE TABLE IF NOT EXISTS senate_bill_116(
+                bill_name varchar(255) UNIQUE PRIMARY KEY NOT NULL,
+                description varchar(1000),
+                bill_status varchar(255),
+                committees varchar(1000),
+                sponsor varchar(255) REFERENCES senator_116(sen_name),
+                congress integer                );
+        """)
+        curs.execute("""
+                ALTER TABLE senate_bill_116 OWNER to postgres
+        """)
+        connection.commit()
+        print("Operation succeeded - Senate Bill table for 116th session created")
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
 
@@ -525,7 +548,11 @@ def insert_reps_116():
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
 
+
 # --------------------------------------------------------------------------------------
+'''
+Functions to insert the house_resolutions into the resolutions tables.
+'''
 
 
 def insert_house_resolutions_115():
@@ -666,10 +693,13 @@ def add_committee_members_and_subcommitees_tables():
         throw_psycopg2_exception(err)
 
 # --------------------------------------------------------------------------------------
+
+
 '''
 Senate Insertion script functions - there aren't any supplementary cleanup functions for
 these functions.
 '''
+
 
 def insert_sen_115():
     try:
@@ -711,6 +741,62 @@ def insert_sen_116():
         throw_psycopg2_exception(err)
 
 # --------------------------------------------------------------------------------------
+'''
+Functions to insert senate bills. These files were manually cleaned (they only required
+single apostrophes to be replaced with double apostrophes.
+'''
+
+def insert_sen_bills_115():
+    try:
+        bills = pd.read_csv('..\webscraping\csv_data\senate_bills_115.csv')
+        reps = pd.read_csv('..\webscraping\csv_data\senators_115.csv')
+
+        rep_names = reps['Name'].tolist()
+
+        curs = connection.cursor()
+        print("Loading Data from senate_bills_115.csv")
+        for index, row in bills.iterrows():
+            if row['sponsors'] in rep_names:
+                curs.execute("""
+                INSERT into senate_bill_115(bill_name, description, bill_status, committees, sponsor, congress)
+                VALUES
+                (
+                '%s', '%s', '%s', '%s', '%s', 115)
+                """ % (row['names'].strip(), row['descriptions'].strip(), row['statuses'].strip(),
+                       row['bill_committees'].strip(), row['sponsors'].strip())
+                )
+        connection.commit()
+        print("Data from senate_bills_115.csv successfully inserted")
+
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+def insert_sen_bills_116():
+    try:
+        bills = pd.read_csv('..\webscraping\csv_data\senate_bills_116.csv')
+        reps = pd.read_csv('..\webscraping\csv_data\senators_116.csv')
+
+        rep_names = reps['Name'].tolist()
+
+        curs = connection.cursor()
+        print("Loading Data from senate_bills_116.csv")
+        for index, row in bills.iterrows():
+            if row['sponsors'] in rep_names:
+                curs.execute("""
+                INSERT into senate_bill_116(bill_name, description, bill_status, committees, sponsor, congress)
+                VALUES
+                (
+                '%s', '%s', '%s', '%s', '%s', 116)
+                """ % (row['names'].strip(), row['descriptions'].strip(), row['statuses'].strip(),
+                       row['bill_committees'].strip(), row['sponsors'].strip())
+                )
+        connection.commit()
+        print("Data from senate_bills_116.csv successfully inserted")
+
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+# --------------------------------------------------------------------------------------
 
 # create_rep_table_115()                        # Created
 # create_rep_table_116()                        # Created
@@ -723,8 +809,8 @@ def insert_sen_116():
 
 # create_sen_table_115()                        # Created
 # create_sen_table_116()                        # Created
-# create_senate_bill_table_115()                # Not Created
-# create_senate_bill_table_116()                # Not Created
+# create_senate_bill_table_115()                # Created
+# create_senate_bill_table_116()                # Created
 # create_senate_committee_table()               # Not Created
 # create_senate_subcommittee_table()            # Not Created
 # create_senate_com_rel_table()                 # Not Created
@@ -740,5 +826,5 @@ def insert_sen_116():
 
 # insert_sen_115()                              # Executed
 # insert_sen_116()                              # Executed
-# insert_sen_bills_115
-# insert_sen_bills_116
+# insert_sen_bills_115()                        # Executed
+# insert_sen_bills_116()                        # Executed
