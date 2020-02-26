@@ -241,3 +241,74 @@ class CSV_Editor:
 
         bill_file.to_csv(csv_file, index=False, encoding='utf-8')
 
+    @staticmethod
+    def clean_committees_names(csv_file, year):
+        house_ref_file = f"../csv_data/house_reps_{year}.csv"
+        senate_ref_file = f"../csv_data/senators_{year}.csv"
+
+        house_ref_df = pd.read_csv(house_ref_file)
+        senate_ref_df = pd.read_csv(senate_ref_file)
+        all_ref_df = pd.concat([house_ref_df, senate_ref_df])
+        names = all_ref_df['Name']
+
+        correct_matches = dict()
+        committee_file = pd.read_csv(csv_file)
+
+        for _, row in committee_file.iterrows():
+            # if row['Committee'].find('House') == 0:
+            #     print("HOUSE")
+            #     print(row['Committee'])
+            #     print(row['Committee'].find('House'))
+            # if row['Committee'].find('Senate') == 0:
+            #     print("SENATE")
+            #     print(row['Committee'])
+            #     print(row['Committee'].find('Senate'))
+            #     names = senate_ref_df['Name']
+            # else:
+            #     print("Weird committee name!!! ")
+            #     print(row['Committee'])
+
+            name_split = str(row['Name']).split()
+
+            new_split = list()
+            for part in name_split:
+                if 'Rep.' not in part and '[' not in part and ']' not in part:
+                    if ',' in part:
+                        new_split.append(part[:-1])
+                    else:
+                        new_split.append(part)
+            name_split = new_split.copy()
+            print(name_split)
+            possible_matches = list()
+
+
+            for n in names:
+                match_count = 0
+                for part in name_split:
+                    if part in n:
+                        match_count += 1
+                if match_count > 1:
+                    possible_matches.append(n)
+            if len(possible_matches) > 1:
+                try:
+                    correct_name = correct_matches[row['Name']]
+                    print(f"replacing {row['Name']} with {correct_name}")
+                    row['Name'] = correct_name
+
+                except:
+                    for poss in possible_matches:
+                        print("correct(?): " + poss)
+                        print("to be replaced: " + ' '.join(name_split))
+                        answer = input('Replace with correct?\n>')
+                        if answer == 'y':
+                            correct_matches[row['Name']] = poss
+                            row['Name'] = poss
+                            break
+            elif len(possible_matches) == 1:
+                print(f"replacing {row['Name']} with {possible_matches[0]}")
+                row['Name'] = possible_matches[0]
+            else:
+                input(f"NO MATCHES FOUND for {' '.join(name_split)}")
+
+        committee_file.to_csv(csv_file, index=False, encoding='utf-8')
+
