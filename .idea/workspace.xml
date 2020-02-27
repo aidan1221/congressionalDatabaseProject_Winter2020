@@ -2,41 +2,148 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7203a629-8770-4eb9-84ab-13320a3b8d89" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/webscraping/committeeyamlscraper.py" beforeDir="false" afterPath="$PROJECT_DIR$/webscraping/committeeyamlscraper.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webscraping/webscraper.py" beforeDir="false" afterPath="$PROJECT_DIR$/webscraping/webscraper.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webscraping/yaml/committees.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/webscraping/yaml/committees.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data Ingestion Script/dataIngestion.py" beforeDir="false" afterPath="$PROJECT_DIR$/Data Ingestion Script/dataIngestion.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webscraping/csv_data/house_bills_115.csv" beforeDir="false" afterPath="$PROJECT_DIR$/webscraping/csv_data/house_bills_115.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webscraping/csv_data/house_bills_116.csv" beforeDir="false" afterPath="$PROJECT_DIR$/webscraping/csv_data/house_bills_116.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webscraping/csv_data/senate_bills_115.csv" beforeDir="false" afterPath="$PROJECT_DIR$/webscraping/csv_data/senate_bills_115.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webscraping/csv_data/senate_bills_116.csv" beforeDir="false" afterPath="$PROJECT_DIR$/webscraping/csv_data/senate_bills_116.csv" afterDir="false" />
     </list>
+    <ignored path="$PROJECT_DIR$/venv/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Data Ingestion Script/dataIngestion.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="176">
+              <caret line="737" lean-forward="true" selection-start-line="737" selection-end-line="737" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>house_bills</find>
+      <find>FOREIGN KEY</find>
+      <find>116</find>
+      <find>'</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>''</replace>
+    </replaceStrings>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectConfigurationFiles">
-    <option name="files">
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/.idea/congressionalDatabaseProject_Winter2020.iml" />
-        <option value="$PROJECT_DIR$/.idea/misc.xml" />
-        <option value="$PROJECT_DIR$/.idea/vcs.xml" />
-        <option value="$PROJECT_DIR$/.idea/modules.xml" />
+        <option value="$PROJECT_DIR$/webscraping/csv_data/house_bills_115.csv" />
+        <option value="$PROJECT_DIR$/webscraping/csv_data/house_bills_116.csv" />
+        <option value="$PROJECT_DIR$/webscraping/csv_data/senate_bills_115.csv" />
+        <option value="$PROJECT_DIR$/webscraping/csv_data/senate_bills_116.csv" />
+        <option value="$PROJECT_DIR$/Data Ingestion Script/dataIngestion.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="210" />
-    <option name="y" value="10" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="323" />
+    <option name="y" value="38" />
     <option name="width" value="1285" />
     <option name="height" value="1040" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="congressionalDatabaseProject_Winter2020" type="b2602c69:ProjectViewProjectNode" />
+              <item name="congressionalDatabaseProject_Winter2020" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="congressionalDatabaseProject_Winter2020" type="b2602c69:ProjectViewProjectNode" />
+              <item name="congressionalDatabaseProject_Winter2020" type="462c0819:PsiDirectoryNode" />
+              <item name="webscraping" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="congressionalDatabaseProject_Winter2020" type="b2602c69:ProjectViewProjectNode" />
+              <item name="congressionalDatabaseProject_Winter2020" type="462c0819:PsiDirectoryNode" />
+              <item name="webscraping" type="462c0819:PsiDirectoryNode" />
+              <item name="csv_data" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Hotspur\Documents\GitHub\congressionalDatabaseProject_Winter2020\Data Ingestion Script" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="dataIngestion" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="congressionalDatabaseProject_Winter2020" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Data Ingestion Script" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Data Ingestion Script/dataIngestion.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.dataIngestion" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -49,13 +156,110 @@
       <option name="presentableId" value="Default" />
       <updated>1581634170329</updated>
       <workItem from="1581634176547" duration="301000" />
+      <workItem from="1582655114739" duration="9853000" />
     </task>
+    <task id="LOCAL-00001" summary="Senators ingested, working on bills&#10;current issue - for some reason it is equating sponsor to bill name,&#10;even though it has been changed in both the schema and the insertion&#10;script.">
+      <created>1582664344209</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1582664344209</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="301000" />
+    <option name="totallyTimeSpent" value="10154000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Favorites" side_tool="true" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1621984" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" />
+      <window_info anchor="bottom" id="Version Control" />
+      <window_info anchor="bottom" id="Python Console" />
+      <window_info anchor="bottom" id="Terminal" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32673267" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="right" id="SciView" />
+      <window_info anchor="right" id="Database" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Senators ingested, working on bills&#10;current issue - for some reason it is equating sponsor to bill name,&#10;even though it has been changed in both the schema and the insertion&#10;script." />
+    <option name="LAST_COMMIT_MESSAGE" value="Senators ingested, working on bills&#10;current issue - for some reason it is equating sponsor to bill name,&#10;even though it has been changed in both the schema and the insertion&#10;script." />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/congressionalDatabaseProject_Winter2020$dataIngestion.coverage" NAME="dataIngestion Coverage Results" MODIFIED="1582675997827" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Data Ingestion Script" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/webscraping/csv_data/house_reps_116.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Data Ingestion Script/credentials.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webscraping/csv_data/house_reps_115.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" column="39" lean-forward="true" selection-start-line="18" selection-start-column="39" selection-end-line="18" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webscraping/csv_data/house_bills_115.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="130">
+          <caret line="950" column="145" selection-start-line="950" selection-start-column="145" selection-end-line="950" selection-end-column="145" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webscraping/csv_data/house_bills_116.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="328" selection-start-line="5" selection-start-column="328" selection-end-line="5" selection-end-column="328" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webscraping/csv_data/senate_bills_116.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="56464">
+          <caret line="3322" column="27" selection-start-line="3322" selection-start-column="27" selection-end-line="3322" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webscraping/csv_data/senate_bills_115.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="52575">
+          <caret line="3803" column="67" selection-start-line="3803" selection-start-column="67" selection-end-line="3803" selection-end-column="67" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Data Ingestion Script/dataIngestion.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="737" lean-forward="true" selection-start-line="737" selection-end-line="737" />
+        </state>
+      </provider>
+    </entry>
   </component>
 </project>

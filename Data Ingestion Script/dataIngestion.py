@@ -46,69 +46,136 @@ except pg.OperationalError as err:
     throw_psycopg2_exception(err)
 
 
-def create_rep_table():
+def create_rep_table_115():
     curs = connection.cursor()
 
     try:
         curs.execute("""
-                CREATE TABLE IF NOT EXISTS representative (
+                CREATE TABLE IF NOT EXISTS representative_115 (
                 rep_name varchar(255) UNIQUE NOT NULL,
                 state varchar(255),
                 district varchar(255),
                 party varchar(255),
                 terms varchar(255),
                 congress integer,
-                PRIMARY KEY (rep_name, state, congress)
+                PRIMARY KEY (rep_name, congress)
                 );
         """)
         curs.execute("""
-                ALTER TABLE representative OWNER to postgres;
+                ALTER TABLE representative_115 OWNER to postgres;
         """)
         connection.commit()
-        print("Operation Succeeded - Representative table created.")
+        print("Operation Succeeded - Representative table created for 115th session.")
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
 
-
-def create_house_resolution():
+def create_rep_table_116():
     curs = connection.cursor()
 
     try:
         curs.execute("""
-                CREATE TABLE IF NOT EXISTS house_resolution (
+                CREATE TABLE IF NOT EXISTS representative_116 (
+                rep_name varchar(255) UNIQUE NOT NULL,
+                state varchar(255),
+                district varchar(255),
+                party varchar(255),
+                terms varchar(255),
+                congress integer,
+                PRIMARY KEY (rep_name, congress)
+                );
+        """)
+        curs.execute("""
+                ALTER TABLE representative_116 OWNER to postgres;
+        """)
+        connection.commit()
+        print("Operation Succeeded - Representative table created for 116th session.")
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+def create_house_resolution_115():
+    curs = connection.cursor()
+
+    try:
+        curs.execute("""
+                CREATE TABLE IF NOT EXISTS house_resolution_115 (
                 res_name varchar(255) PRIMARY KEY NOT NULL,
-                sponsor varchar(255) REFERENCES representative(rep_name),
-                committees varchar(255),
+                description varchar(1000),
                 status varchar(255),
-                description varchar(1000)
+                committees varchar(1000),
+                sponsor varchar(255) REFERENCES representative_115 (rep_name),
+                congress integer
                 );
         """)
         curs.execute("""
-                ALTER TABLE house_resolution OWNER to postgres
+                ALTER TABLE house_resolution_115 OWNER to postgres
         """)
         connection.commit()
-        print("Operation Succeeded - House Resolution table created.")
+        print("Operation Succeeded - House Resolution table created for 115th session.")
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
 
 
-def create_house_committee_table():
+def create_house_resolution_116():
     curs = connection.cursor()
 
     try:
         curs.execute("""
-                CREATE TABLE IF NOT EXISTS house_committee (
+                CREATE TABLE IF NOT EXISTS house_resolution_116 (
+                res_name varchar(255) PRIMARY KEY NOT NULL,
+                description varchar(1000),
+                status varchar(255),
+                committees varchar(1000),
+                sponsor varchar(255) REFERENCES representative_116(rep_name),
+                congress integer
+                );
+        """)
+        curs.execute("""
+                ALTER TABLE house_resolution_116 OWNER to postgres
+        """)
+        connection.commit()
+        print("Operation Succeeded - House Resolution table created for 116th session.")
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+
+def create_house_committee_table_115():
+    curs = connection.cursor()
+
+    try:
+        curs.execute("""
+                CREATE TABLE IF NOT EXISTS house_committee_115 (
                 hc_name varchar(255) UNIQUE NOT NULL,
-                chair varchar(255) NOT NULL REFERENCES representative(rep_name),
-                ranking_member varchar(255) REFERENCES representative(rep_name),
+                chair varchar(255) NOT NULL REFERENCES representative_115(rep_name),
+                ranking_member varchar(255) REFERENCES representative_115(rep_name),
                 PRIMARY KEY (hc_name, chair)
                 );
         """)
         curs.execute("""
-                ALTER TABLE house_committee OWNER to postgres;
+                ALTER TABLE house_committee_115 OWNER to postgres;
         """)
         connection.commit()
-        print("Operation Succeeded - House Committee table created.")
+        print("Operation Succeeded - House Committee table created for 115th session.")
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+
+def create_house_committee_table_116():
+    curs = connection.cursor()
+
+    try:
+        curs.execute("""
+                CREATE TABLE IF NOT EXISTS house_committee_116 (
+                hc_name varchar(255) UNIQUE NOT NULL,
+                chair varchar(255) NOT NULL REFERENCES representative_116(rep_name),
+                ranking_member varchar(255) REFERENCES representative_116(rep_name),
+                PRIMARY KEY (hc_name, chair)
+                );
+        """)
+        curs.execute("""
+                ALTER TABLE house_committee_116 OWNER to postgres;
+        """)
+        connection.commit()
+        print("Operation Succeeded - House Committee table created for 116th session.")
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
 
@@ -175,13 +242,18 @@ def create_res_cosponsors_table():
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
 
+# --------------------------------------------------------------------------------------
+'''
+Create senate tables
+'''
 
-def create_sen_table():
+
+def create_sen_table_115():
     curs = connection.cursor()
 
     try:
         curs.execute("""
-                CREATE TABLE IF NOT EXISTS senator (
+                CREATE TABLE IF NOT EXISTS senator_115 (
                 sen_name varchar(255) UNIQUE NOT NULL,
                 state varchar (255),
                 party varchar(255),
@@ -191,32 +263,77 @@ def create_sen_table():
                 );
         """)
         curs.execute("""
-                ALTER TABLE senator OWNER to postgres;
+                ALTER TABLE senator_115 OWNER to postgres;
         """)
         connection.commit()
-        print("Operation Succeeded - Senator table created.")
+        print("Operation Succeeded - Senator table created for 115th session.")
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
 
-
-def create_senate_bill_table():
+def create_sen_table_116():
     curs = connection.cursor()
 
     try:
         curs.execute("""
-                CREATE TABLE IF NOT EXISTS senate_bill(
-                bill_name varchar(255) UNIQUE PRIMARY KEY NOT NULL,
-                sponsor varchar(255) REFERENCES senator(sen_name),
-                committees varchar(255),
-                bill_status varchar(255),
-                description varchar(500)
+                CREATE TABLE IF NOT EXISTS senator_116 (
+                sen_name varchar(255) UNIQUE NOT NULL,
+                state varchar (255),
+                party varchar(255),
+                terms varchar(255),
+                congress integer,
+                PRIMARY KEY (sen_name, state, congress)
                 );
         """)
         curs.execute("""
-                ALTER TABLE senate_bill OWNER to postgres
+                ALTER TABLE senator_116 OWNER to postgres;
         """)
         connection.commit()
-        print("Operation succeeded - Senate Bill table created")
+        print("Operation Succeeded - Senator table created for 116th session.")
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+
+def create_senate_bill_table_115():
+    curs = connection.cursor()
+
+    try:
+        curs.execute("""
+                CREATE TABLE IF NOT EXISTS senate_bill_115(
+                bill_name varchar(255) UNIQUE PRIMARY KEY NOT NULL,
+                description varchar(1000),
+                bill_status varchar(255),
+                committees varchar(1000),
+                sponsor varchar(255) REFERENCES senator_115(sen_name),
+                congress integer
+                );
+        """)
+        curs.execute("""
+                ALTER TABLE senate_bill_115 OWNER to postgres
+        """)
+        connection.commit()
+        print("Operation succeeded - Senate Bill table for 115th session created")
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+
+def create_senate_bill_table_116():
+    curs = connection.cursor()
+
+    try:
+        curs.execute("""
+                CREATE TABLE IF NOT EXISTS senate_bill_116(
+                bill_name varchar(255) UNIQUE PRIMARY KEY NOT NULL,
+                description varchar(1000),
+                bill_status varchar(255),
+                committees varchar(1000),
+                sponsor varchar(255) REFERENCES senator_116(sen_name),
+                congress integer                );
+        """)
+        curs.execute("""
+                ALTER TABLE senate_bill_116 OWNER to postgres
+        """)
+        connection.commit()
+        print("Operation succeeded - Senate Bill table for 116th session created")
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
 
@@ -304,8 +421,21 @@ def create_sen_bill_cosponsors_table():
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
 
+# --------------------------------------------------------------------------------------
+'''
+Representative insertion functions and their associated cleanup functions
+DO NOT RUN fix_reps functions on files which are already fixed - You can tell if
+    a file has been fixed because the district will be an integer, rather than a
+    float, or At Large will have been replaced with 'At Large'.
+    
+Running it on fixed files will produce an index out of range error and a crash.
+Although this is fixable, an easier solution is to don't run it twice on the same
+file.
+'''
+
+
 def fix_reps_115_csv():
-    reps = csv.reader(open('..\webscraping\csv_data\house_reps_115 - Copy.csv'))
+    reps = csv.reader(open('..\webscraping\csv_data\house_reps_115.csv'))
     lines = list(reps)
 
     for line in lines:
@@ -341,30 +471,63 @@ def fix_reps_115_csv():
     writer.writerows(lines)
 
 
+def fix_reps_116_csv():
+    reps = csv.reader(open('..\webscraping\csv_data\house_reps_116.csv'))
+    lines = list(reps)
+
+    for line in lines:
+        print(line)
+        if line[0] == 'Michael F. Q. San Nicolas':
+            line[1] = 'GU'
+        elif line[0] == 'Jenniffer Gonzalez-Colon':
+            line[1] = 'PR'
+        elif line[0] == 'Eleanor Holmes Norton':
+            line[1] = 'DC'
+        elif line[0] == 'Stacey E. Plaskett':
+            line[1] = 'VI'
+        elif line[0] == 'Aumua Amata Coleman Radewagen':
+            line[1] = 'AS'
+        elif line[0] == 'Gregorio Kilili Camacho Sablan':
+            line[1] = 'MP'
+        elif line[0] == 'Tom O\'Halleran':
+            line[0] = 'Tom O''Halleran'
+        elif line[0] == 'Beto O\'Rourke':
+            line[0] = 'Beto O''Rourke'
+        else:
+            pass
+
+    for line in lines:
+        print(line)
+        if line[2] == 'At Large':
+            line[2] = '\'At Large\''
+        elif line[2] != 'District':
+            line[2] = ''.join(line[2].split())[:-2]
+        print(line[2])
+
+    writer = csv.writer(open('..\webscraping\csv_data\house_reps_116.csv', 'w'))
+    writer.writerows(lines)
+
+
 def insert_reps_115():
     try:
         reps = pd.read_csv('..\webscraping\csv_data\house_reps_115.csv')
         curs = connection.cursor()
         print("Loading Data from house_reps_115.csv")
         for index, row in reps.iterrows():
-            for index, row in reps.iterrows():
-                print("Reading row", row["Name"])
-                # print("State is type ", type(row['State']), "and State is", row["State"])
-                # print("District is type", type(row['District']))
-                # print("Party is type", type(row['Party']))
-                # print("Terms is type", type([row['Terms']]))
-                curs.execute("""
-                INSERT into representative(rep_name, state, district, party, terms, congress)
-                VALUES (
-                    '%s', '%s', %s, '%s', '%s', 115
-                )""" % (row['Name'].strip(), row['State'].strip(), row['District'], row['Party'].strip(),
-                        row['Terms'].strip())
-                             )
+            print("Inserting row", row["Name"])
+            curs.execute("""
+            INSERT into representative_115(rep_name, state, district, party, terms, congress)
+            VALUES (
+                '%s', '%s', %s, '%s', '%s', 115
+            )""" % (row['Name'].strip(), row['State'].strip(), row['District'], row['Party'].strip(),
+                    row['Terms'].strip())
+                         )
 
         connection.commit()
         print("Data from Representative.csv successfully inserted.")
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
+
 
 def insert_reps_116():
     try:
@@ -372,8 +535,9 @@ def insert_reps_116():
         curs = connection.cursor()
         print("Loading Data from house_reps_116.csv")
         for index, row in reps.iterrows():
+            print("Inserting row", row["Name"])
             curs.execute("""
-            INSERT into representative(rep_name, state, district, party, terms, congress)
+            INSERT into representative_116(rep_name, state, district, party, terms, congress)
             VALUES (
                 '%s', '%s', %s, '%s', '%s', 116
             )""" % (row['Name'].strip(), row['State'].strip(), row['District'], row['Party'].strip(), row['Terms'].strip())
@@ -384,27 +548,64 @@ def insert_reps_116():
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
 
-def insert_house_bills():
-    try:
-        bills = pd.read_csv('house_bills.csv')
-        reps = pd.read_csv('representative.csv')
 
-        rep_names = reps['rep_name'].tolist()
+# --------------------------------------------------------------------------------------
+'''
+Functions to insert the house_resolutions into the resolutions tables.
+'''
+
+
+def insert_house_resolutions_115():
+    try:
+        bills = pd.read_csv('..\webscraping\csv_data\house_bills_115.csv')
+        reps = pd.read_csv('..\webscraping\csv_data\house_reps_115.csv')
+
+        rep_names = reps['Name'].tolist()
 
         curs = connection.cursor()
-        print("Loading Data from house_bills.csv")
+        print("Loading Data from house_resolutions_115.csv")
         for index, row in bills.iterrows():
-            if row['sponsor'] in rep_names:
+            if row['sponsors'] in rep_names:
                 curs.execute("""
-                INSERT into congresql.representative(res_name, sponsor, committees, status, description)
+                INSERT into house_resolution_115(res_name, description, status, committees, sponsor, congress)
                 VALUES
                 (
-                '%s', '%s', '%s', '%s', '%s')
-                """ % (row['hrname'].strip(), row['sponsor'].strip(), row['committees'].strip()), row['status'].strip(), row['description'].strip())
+                '%s', '%s', '%s', '%s', '%s', 115)
+                """ % (row['names'].strip(), row['descriptions'].strip(), row['statuses'].strip(),
+                       row['bill_committees'].strip(), row['sponsors'].strip())
+                )
         connection.commit()
-        print("Data from House Bills successfully inserted")
+        print("Data from house_resolutions_115.csv successfully inserted")
+
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
+
+def insert_house_resolutions_116():
+    try:
+        bills = pd.read_csv('..\webscraping\csv_data\house_bills_116.csv')
+        reps = pd.read_csv('..\webscraping\csv_data\house_reps_116.csv')
+
+        rep_names = reps['Name'].tolist()
+
+        curs = connection.cursor()
+        print("Loading Data from house_resolutions_116.csv")
+        for index, row in bills.iterrows():
+            if row['sponsors'] in rep_names:
+                curs.execute("""
+                INSERT into house_resolution_116(res_name, description, status, committees, sponsor, congress)
+                VALUES
+                (
+                '%s', '%s', '%s', '%s', '%s', 116)
+                """ % (row['names'].strip(), row['descriptions'].strip(), row['statuses'].strip(),
+                       row['bill_committees'].strip(), row['sponsors'].strip())
+                )
+        connection.commit()
+        print("Data from house_resolutions_116.csv successfully inserted")
+
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+
 
 def insert_house_committee():
     try:
@@ -491,21 +692,139 @@ def add_committee_members_and_subcommitees_tables():
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
 
-# create_rep_table()
-# create_house_committee_table()
-# create_house_subcommittee_table()
-# create_house_committee_relational_table()
-# create_house_resolution()
+# --------------------------------------------------------------------------------------
 
-# create_sen_table()
-# create_senate_committee_table()
-# create_senate_subcommittee_table()
-# create_senate_com_rel_table()
-# create_senate_bill_table()
-# create_sen_bill_cosponsors_table()
 
-fix_reps_115_csv()
-insert_reps_115()
-# insert_reps_116()
-# insert_house_bills()
+'''
+Senate Insertion script functions - there aren't any supplementary cleanup functions for
+these functions.
+'''
+
+
+def insert_sen_115():
+    try:
+        reps = pd.read_csv('..\webscraping\csv_data\senators_115.csv')
+        curs = connection.cursor()
+        print("Loading Data from senators_115.csv")
+        for index, row in reps.iterrows():
+            print("Inserting row", row["Name"])
+            curs.execute("""
+            INSERT into senator_115(sen_name, state, party, terms, congress)
+            VALUES (
+                '%s', '%s', '%s', '%s', 115
+            )""" % (row['Name'].strip(), row['State'].strip(), row['Party'].strip(), row['Terms'].strip())
+            )
+
+        connection.commit()
+        print("Data from Senators_115.csv successfully inserted.")
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+
+def insert_sen_116():
+    try:
+        reps = pd.read_csv('..\webscraping\csv_data\senators_116.csv')
+        curs = connection.cursor()
+        print("Loading Data from house_reps_116.csv")
+        for index, row in reps.iterrows():
+            print("Inserting row", row["Name"])
+            curs.execute("""
+            INSERT into senator_116(sen_name, state, party, terms, congress)
+            VALUES (
+                '%s', '%s', '%s', '%s', 116
+            )""" % (row['Name'].strip(), row['State'].strip(), row['Party'].strip(), row['Terms'].strip())
+            )
+
+        connection.commit()
+        print("Data from Senators_116.csv successfully inserted.")
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+# --------------------------------------------------------------------------------------
+'''
+Functions to insert senate bills. These files were manually cleaned (they only required
+single apostrophes to be replaced with double apostrophes.
+'''
+
+def insert_sen_bills_115():
+    try:
+        bills = pd.read_csv('..\webscraping\csv_data\senate_bills_115.csv')
+        reps = pd.read_csv('..\webscraping\csv_data\senators_115.csv')
+
+        rep_names = reps['Name'].tolist()
+
+        curs = connection.cursor()
+        print("Loading Data from senate_bills_115.csv")
+        for index, row in bills.iterrows():
+            if row['sponsors'] in rep_names:
+                curs.execute("""
+                INSERT into senate_bill_115(bill_name, description, bill_status, committees, sponsor, congress)
+                VALUES
+                (
+                '%s', '%s', '%s', '%s', '%s', 115)
+                """ % (row['names'].strip(), row['descriptions'].strip(), row['statuses'].strip(),
+                       row['bill_committees'].strip(), row['sponsors'].strip())
+                )
+        connection.commit()
+        print("Data from senate_bills_115.csv successfully inserted")
+
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+def insert_sen_bills_116():
+    try:
+        bills = pd.read_csv('..\webscraping\csv_data\senate_bills_116.csv')
+        reps = pd.read_csv('..\webscraping\csv_data\senators_116.csv')
+
+        rep_names = reps['Name'].tolist()
+
+        curs = connection.cursor()
+        print("Loading Data from senate_bills_116.csv")
+        for index, row in bills.iterrows():
+            if row['sponsors'] in rep_names:
+                curs.execute("""
+                INSERT into senate_bill_116(bill_name, description, bill_status, committees, sponsor, congress)
+                VALUES
+                (
+                '%s', '%s', '%s', '%s', '%s', 116)
+                """ % (row['names'].strip(), row['descriptions'].strip(), row['statuses'].strip(),
+                       row['bill_committees'].strip(), row['sponsors'].strip())
+                )
+        connection.commit()
+        print("Data from senate_bills_116.csv successfully inserted")
+
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+# --------------------------------------------------------------------------------------
+
+# create_rep_table_115()                        # Created
+# create_rep_table_116()                        # Created
+# create_house_committee_table_115()            # Created
+# create_house_committee_table_116()            # Created
+# create_house_resolution_115()                 # Created
+# create_house_resolution_116()                 # Created
+# create_house_subcommittee_table()             # Not Created
+# create_house_committee_relational_table()     # Not Created
+
+# create_sen_table_115()                        # Created
+# create_sen_table_116()                        # Created
+# create_senate_bill_table_115()                # Created
+# create_senate_bill_table_116()                # Created
+# create_senate_committee_table()               # Not Created
+# create_senate_subcommittee_table()            # Not Created
+# create_senate_com_rel_table()                 # Not Created
+# create_sen_bill_cosponsors_table()            # Not Created
+
+# fix_reps_115_csv()                            # Executed
+# fix_reps_116_csv()                            # Executed
+# insert_reps_115()                             # Executed
+# insert_reps_116()                             # Executed
+# insert_house_resolutions_115()                # Executed
+# insert_house_resolutions_116()                # Executed
 # insert_house_committee()
+
+# insert_sen_115()                              # Executed
+# insert_sen_116()                              # Executed
+# insert_sen_bills_115()                        # Executed
+# insert_sen_bills_116()                        # Executed
