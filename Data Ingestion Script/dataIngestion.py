@@ -180,19 +180,39 @@ def create_house_committee_table_116():
         throw_psycopg2_exception(err)
 
 
-def create_house_subcommittee_table():
+def create_house_subcommittee_table_115():
     curs = connection.cursor()
 
     try:
         curs.execute("""
-                CREATE TABLE IF NOT EXISTS house_subcommittee (
+                CREATE TABLE IF NOT EXISTS house_subcommittee_115 (
                 hsubc_name varchar(255) NOT NULL,
-                sc_of varchar(255) REFERENCES house_committee(hc_name),
+                sc_of varchar(255) REFERENCES house_committee_115(hc_name),
                 PRIMARY KEY (hsubc_name, sc_of)
                 );
         """)
         curs.execute("""
-                ALTER TABLE house_subcommittee OWNER to postgres;
+                ALTER TABLE house_subcommittee_115 OWNER to postgres;
+        """)
+        connection.commit()
+        print("Operation Succeeded - House Subcommittee table for 115th session created.")
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+
+def create_house_subcommittee_table_116():
+    curs = connection.cursor()
+
+    try:
+        curs.execute("""
+                CREATE TABLE IF NOT EXISTS house_subcommittee_116 (
+                hsubc_name varchar(255) NOT NULL,
+                sc_of varchar(255) REFERENCES house_committee_116(hc_name),
+                PRIMARY KEY (hsubc_name, sc_of)
+                );
+        """)
+        curs.execute("""
+                ALTER TABLE house_subcommittee_116 OWNER to postgres;
         """)
         connection.commit()
         print("Operation Succeeded - House Subcommittee table created.")
@@ -200,14 +220,20 @@ def create_house_subcommittee_table():
         throw_psycopg2_exception(err)
 
 
-def create_house_committee_relational_table():
+# --------------------------------------------------------------------------------------
+'''
+Create house committee relational table
+'''
+
+
+def create_house_committee_relational_table_115():
     curs = connection.cursor()
 
     try:
         curs.execute("""
-                CREATE TABLE IF NOT EXISTS house_com_rel (
-                rep_name varchar(255) REFERENCES representative(rep_name),
-                hc_name varchar(255) REFERENCES house_committee(hc_name),
+                CREATE TABLE IF NOT EXISTS house_com_rel_115 (
+                rep_name varchar(255) REFERENCES representative_115(rep_name),
+                hc_name varchar(255) REFERENCES house_committee_115(hc_name),
                 chair varchar(3),
                 ranking_member varchar(3),
                 CONSTRAINT CHK_CHAIR CHECK (chair in ('yes', 'no')),
@@ -215,12 +241,41 @@ def create_house_committee_relational_table():
                 );
         """)
         curs.execute("""
-                ALTER TABLE house_com_rel OWNER to postgres;
+                ALTER TABLE house_com_rel_115 OWNER to postgres;
         """)
         connection.commit()
-        print("Operation Succeeded - House Committe Relational table created")
+        print("Operation Succeeded - House Committee Relational table created")
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
+
+
+def create_house_committee_relational_table_116():
+    curs = connection.cursor()
+
+    try:
+        curs.execute("""
+                CREATE TABLE IF NOT EXISTS house_com_rel_116 (
+                rep_name varchar(255) REFERENCES representative_115(rep_name),
+                hc_name varchar(255) REFERENCES house_committee_115(hc_name),
+                chair varchar(3),
+                ranking_member varchar(3),
+                CONSTRAINT CHK_CHAIR CHECK (chair in ('yes', 'no')),
+                CONSTRAINT CHK_RNK_MEM CHECK (ranking_member in ('yes', 'no'))
+                );
+        """)
+        curs.execute("""
+                ALTER TABLE house_com_rel_116 OWNER to postgres;
+        """)
+        connection.commit()
+        print("Operation Succeeded - House Committee Relational table created")
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+
+# --------------------------------------------------------------------------------------
+'''
+Create resolutions cosponsors table
+'''
 
 
 def create_res_cosponsors_table():
@@ -327,7 +382,8 @@ def create_senate_bill_table_116():
                 bill_status varchar(255),
                 committees varchar(1000),
                 sponsor varchar(255) REFERENCES senator_116(sen_name),
-                congress integer                );
+                congress integer
+                );
         """)
         curs.execute("""
                 ALTER TABLE senate_bill_116 OWNER to postgres
@@ -338,55 +394,127 @@ def create_senate_bill_table_116():
         throw_psycopg2_exception(err)
 
 
-def create_senate_committee_table():
+def create_senate_committee_table_115():
     curs = connection.cursor()
 
     try:
         curs.execute("""
-                CREATE TABLE IF NOT EXISTS senate_committee (
-                sc_name varchar(255) NOT NULL,
-                chair varchar(255) NOT NULL REFERENCES senator(sen_name),
-                ranking_member varchar(255) REFERENCES senator(sen_name),
+                CREATE TABLE IF NOT EXISTS senate_committee_115 (
+                sc_name varchar(255) UNIQUE NOT NULL,
+                chair varchar(255) NOT NULL REFERENCES senator_115(sen_name),
+                ranking_member varchar(255) REFERENCES senator_115(sen_name),
                 PRIMARY KEY (sc_name, chair)
                 );
         """)
         curs.execute("""
-                ALTER TABLE senate_committee OWNER to postgres;
+                ALTER TABLE senate_committee_115 OWNER to postgres;
         """)
         connection.commit()
-        print("Operation Succeeded - Senate Committee table created.")
+        print("Operation Succeeded - Senate Committee table for 115th session created.")
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
 
 
-def create_senate_subcommittee_table():
+def create_senate_committee_table_116():
     curs = connection.cursor()
 
     try:
         curs.execute("""
-                CREATE TABLE IF NOT EXISTS senate_subcommittee (
-                ssubc_name varchar(255) NOT NULL,
-                sc_of varchar(255) REFERENCES senate_committee(sc_name),
-                PRIMARY KEY (ssubc_name, sc_of)
+                CREATE TABLE IF NOT EXISTS senate_committee_116 (
+                sc_name varchar(255) UNIQUE NOT NULL,
+                chair varchar(255) NOT NULL REFERENCES senator_116(sen_name),
+                ranking_member varchar(255) REFERENCES senator_116(sen_name),
+                PRIMARY KEY (sc_name, chair)
                 );
         """)
         curs.execute("""
-                ALTER TABLE senate_subcommittee OWNER to postgres;
+                ALTER TABLE senate_committee_116 OWNER to postgres;
         """)
         connection.commit()
-        print("Operation Succeeded - Senate Subcommittee table created.")
+        print("Operation Succeeded - Senate Committee table for 116th session created.")
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
 
 
-def create_senate_com_rel_table():
+def create_senate_subcommittee_table_115():
     curs = connection.cursor()
 
     try:
         curs.execute("""
-                CREATE TABLE IF NOT EXISTS senate_com_rel (
-                sen_name varchar(255) REFERENCES senator(sen_name),
-                sc_name varchar(255) REFERENCES senate_committee(sc_name),
+                CREATE TABLE IF NOT EXISTS senate_subcommittee_115 (
+                ssubc_name varchar(255) UNIQUE NOT NULL,
+                sc_of varchar(255) REFERENCES senate_committee_115(sc_name),
+                PRIMARY KEY (ssubc_name)
+                );
+        """)
+        curs.execute("""
+                ALTER TABLE senate_subcommittee_115 OWNER to postgres;
+        """)
+        connection.commit()
+        print("Operation Succeeded - Senate Subcommittee table for 115th session created.")
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+
+def create_senate_subcommittee_table_116():
+    curs = connection.cursor()
+
+    try:
+        curs.execute("""
+                CREATE TABLE IF NOT EXISTS senate_subcommittee_116 (
+                ssubc_name varchar(255) UNIQUE NOT NULL,
+                sc_of varchar(255) REFERENCES senate_committee_116(sc_name),
+                PRIMARY KEY (ssubc_name)
+                );
+        """)
+        curs.execute("""
+                ALTER TABLE senate_subcommittee_116 OWNER to postgres;
+        """)
+        connection.commit()
+        print("Operation Succeeded - Senate Subcommittee table for 116th session created.")
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+
+# --------------------------------------------------------------------------------------
+'''
+Create senate com rel tables
+'''
+
+
+def create_senate_com_rel_table_115():
+    curs = connection.cursor()
+
+    try:
+        curs.execute("""
+                CREATE TABLE IF NOT EXISTS senate_com_rel_115 (
+                sen_name varchar(255) REFERENCES senator_115(sen_name),
+                sc_name varchar(255) REFERENCES senate_committee_115(sc_name),
+                subc_name varchar(255) REFERENCES senate_subcommittee_115(ssubc_name)
+                chair varchar(3),
+                ranking_member varchar(3),
+                CONSTRAINT CHK_CHAIR CHECK (chair in('yes', 'no')),
+                CONSTRAINT CHK_RNK_MEM CHECK (ranking_member in ('yes', 'no'))
+                );
+        """)
+        curs.execute("""
+                ALTER TABLE senate_com_rel_115 OWNER to postgres;
+        """)
+        connection.commit()
+        print("Operation Succeeded - Senate Committee Relational table for session 115 created")
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+
+def create_senate_com_rel_table_116():
+    curs = connection.cursor()
+
+    try:
+        curs.execute("""
+                CREATE TABLE IF NOT EXISTS senate_com_rel_116 (
+                sen_name varchar(255) REFERENCES senator_116(sen_name),
+                sc_name varchar(255) REFERENCES senate_committee_116(sc_name),
+                subc_name varchar(255) REFERENCES senate_subcommittee_116(ssubc_name)
                 chair varchar(3),
                 ranking_member varchar(3),
                 CONSTRAINT CHK_CHAIR CHECK (chair in('yes', 'no')),
@@ -397,19 +525,24 @@ def create_senate_com_rel_table():
                 ALTER TABLE senate_com_rel OWNER to postgres;
         """)
         connection.commit()
-        print("Operation Succeeded - Senate Committee Relational table created")
+        print("Operation Succeeded - Senate Committee Relational table for 116th session created")
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
 
 
-def create_sen_bill_cosponsors_table():
+# --------------------------------------------------------------------------------------
+'''
+Create Senate Bill Cosponsors Tables
+'''
+
+def create_sen_bill_cosponsors_table_115():
     curs = connection.cursor()
 
     try:
         curs.execute("""
                 CREATE TABLE IF NOT EXISTS bill_cosponsors (
-                bill_name varchar(255) NOT NULL REFERENCES senate_bill(bill_name),
-                cosponsor varchar(255) NOT NULL REFERENCES senator(sen_name),
+                bill_name varchar(255) NOT NULL REFERENCES senate_bill_115(bill_name),
+                cosponsor varchar(255) NOT NULL REFERENCES senator_115(sen_name),
                 PRIMARY KEY (bill_name, cosponsor)
         );
         """)
@@ -417,9 +550,82 @@ def create_sen_bill_cosponsors_table():
                 ALTER TABLE bill_cosponsors OWNER to postgres;
         """)
         connection.commit()
-        print("Operation Succeeded - Senate Bill Co-Sponsors table created")
+        print("Operation Succeeded - Senate Bill Co-Sponsors table for 115th session created")
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
+
+
+def create_sen_bill_cosponsors_table_116():
+    curs = connection.cursor()
+
+    try:
+        curs.execute("""
+                CREATE TABLE IF NOT EXISTS bill_cosponsors (
+                bill_name varchar(255) NOT NULL REFERENCES senate_bill_116(bill_name),
+                cosponsor varchar(255) NOT NULL REFERENCES senator_116(sen_name),
+                PRIMARY KEY (bill_name, cosponsor)
+        );
+        """)
+        curs.execute("""
+                ALTER TABLE bill_cosponsors OWNER to postgres;
+        """)
+        connection.commit()
+        print("Operation Succeeded - Senate Bill Co-Sponsors table for 116th session created")
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+
+# --------------------------------------------------------------------------------------
+'''
+Create house committee relational table
+'''
+
+
+def create_senate_committee_relational_table_115():
+    curs = connection.cursor()
+
+    try:
+        curs.execute("""
+                CREATE TABLE IF NOT EXISTS senate_com_rel_115 (
+                sen_name varchar(255) REFERENCES senator_115(rep_name),
+                sc_name varchar(255) REFERENCES senate_committee_115(sc_name),
+                chair varchar(3),
+                ranking_member varchar(3),
+                CONSTRAINT CHK_CHAIR CHECK (chair in ('yes', 'no')),
+                CONSTRAINT CHK_RNK_MEM CHECK (ranking_member in ('yes', 'no'))
+                );
+        """)
+        curs.execute("""
+                ALTER TABLE senate_com_rel_115 OWNER to postgres;
+        """)
+        connection.commit()
+        print("Operation Succeeded - Senate Committee Relational table for 115th Session created")
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+
+def create_senate_committee_relational_table_116():
+    curs = connection.cursor()
+
+    try:
+        curs.execute("""
+                CREATE TABLE IF NOT EXISTS senate_com_rel_116 (
+                senate_name varchar(255) REFERENCES senator_116(rep_name),
+                sc_name varchar(255) REFERENCES senate_committee_116(hc_name),
+                chair varchar(3),
+                ranking_member varchar(3),
+                CONSTRAINT CHK_CHAIR CHECK (chair in ('yes', 'no')),
+                CONSTRAINT CHK_RNK_MEM CHECK (ranking_member in ('yes', 'no'))
+                );
+        """)
+        curs.execute("""
+                ALTER TABLE senate_com_rel_115 OWNER to postgres;
+        """)
+        connection.commit()
+        print("Operation Succeeded - Senate Committee Relational table for 116th session created")
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
 
 # --------------------------------------------------------------------------------------
 '''
@@ -798,23 +1004,30 @@ def insert_sen_bills_116():
 
 # --------------------------------------------------------------------------------------
 
+
 # create_rep_table_115()                        # Created
 # create_rep_table_116()                        # Created
 # create_house_committee_table_115()            # Created
 # create_house_committee_table_116()            # Created
 # create_house_resolution_115()                 # Created
 # create_house_resolution_116()                 # Created
-# create_house_subcommittee_table()             # Not Created
-# create_house_committee_relational_table()     # Not Created
+# create_house_subcommittee_table_115()         # Created
+# create_house_subcommittee_table_116()         # Created
+# create_house_committee_relational_table_115() # Created
+# create_house_committee_relational_table_116() # Created
+# create_house_resolution_cosponsors_table()    # Not Created
 
 # create_sen_table_115()                        # Created
 # create_sen_table_116()                        # Created
 # create_senate_bill_table_115()                # Created
 # create_senate_bill_table_116()                # Created
-# create_senate_committee_table()               # Not Created
-# create_senate_subcommittee_table()            # Not Created
+create_senate_committee_table_115()           # Not Created
+create_senate_committee_table_116()           # Not Created
+create_senate_subcommittee_table_115()        # Not Created
+create_senate_subcommittee_table_116()        # Not Created
 # create_senate_com_rel_table()                 # Not Created
-# create_sen_bill_cosponsors_table()            # Not Created
+# create_sen_bill_cosponsors_table_115()        # Not Created
+# create_sen_bill_cosponsors_table_116()        # Not Created
 
 # fix_reps_115_csv()                            # Executed
 # fix_reps_116_csv()                            # Executed
@@ -822,7 +1035,8 @@ def insert_sen_bills_116():
 # insert_reps_116()                             # Executed
 # insert_house_resolutions_115()                # Executed
 # insert_house_resolutions_116()                # Executed
-# insert_house_committee()
+# insert_house_committee_115()
+# insert_house_committee_116()
 
 # insert_sen_115()                              # Executed
 # insert_sen_116()                              # Executed
