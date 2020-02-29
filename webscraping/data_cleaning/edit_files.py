@@ -12,6 +12,9 @@ house_bills_115 = "../csv_data/house_bills_115.csv"
 senate_bills_116 = "../csv_data/senate_bills_116.csv"
 senate_bills_115 = "../csv_data/senate_bills_115.csv"
 
+committees_115 = '../csv_data/115_committee_membership.csv'
+committees_116 = '../csv_data/116_committee_membership.csv'
+
 
 # csve.clean_house_representative_data_csv(house_reps_116)
 # csve.clean_house_representative_data_csv(house_reps_115)
@@ -22,5 +25,8 @@ senate_bills_115 = "../csv_data/senate_bills_115.csv"
 
 # csve.clean_bills_names(house_bills_116, "house", 116)
 # csve.clean_bills_names(house_bills_115, "house", 115)
-csve.clean_bills_names(senate_bills_115, "senate", 115)
-csve.clean_bills_names(senate_bills_116, "senate", 116)
+# csve.clean_bills_names(senate_bills_115, "senate", 115)
+# csve.clean_bills_names(senate_bills_116, "senate", 116)
+
+csve.clean_committees_names(committees_115, 115)
+csve.clean_committees_names(committees_116, 116)
