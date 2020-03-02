@@ -4,10 +4,7 @@
     <list default="true" id="7203a629-8770-4eb9-84ab-13320a3b8d89" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Data Ingestion Script/dataIngestion.py" beforeDir="false" afterPath="$PROJECT_DIR$/Data Ingestion Script/dataIngestion.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webscraping/csv_data/house_bills_115.csv" beforeDir="false" afterPath="$PROJECT_DIR$/webscraping/csv_data/house_bills_115.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webscraping/csv_data/house_bills_116.csv" beforeDir="false" afterPath="$PROJECT_DIR$/webscraping/csv_data/house_bills_116.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webscraping/csv_data/senate_bills_115.csv" beforeDir="false" afterPath="$PROJECT_DIR$/webscraping/csv_data/senate_bills_115.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webscraping/csv_data/senate_bills_116.csv" beforeDir="false" afterPath="$PROJECT_DIR$/webscraping/csv_data/senate_bills_116.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webscraping/csv_data/115_committee_membership.csv" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/venv/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -17,12 +14,12 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Data Ingestion Script/dataIngestion.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="737" lean-forward="true" selection-start-line="737" selection-end-line="737" />
+            <state relative-caret-position="436">
+              <caret line="815" column="51" selection-start-line="815" selection-start-column="51" selection-end-line="815" selection-end-column="51" />
             </state>
           </provider>
         </entry>
@@ -35,9 +32,37 @@
       <find>FOREIGN KEY</find>
       <find>116</find>
       <find>'</find>
+      <find>create_senate_committee_table</find>
+      <find>house_sub</find>
+      <find>house_com_rel</find>
+      <find>create_senate_committee</find>
+      <find>create_senate_subcommittee_table_115</find>
+      <find>create_senate_subcommittee_table</find>
+      <find>house_committee_115</find>
+      <find>house_com_</find>
+      <find>House</find>
+      <find>senate_committee</find>
+      <find>house_committee_relational</find>
+      <find>PRIMARY KEY (hsub</find>
+      <find>TODO</find>
+      <find>IF NOT EXISTS</find>
+      <find>Pallone,</find>
+      <find>Ranking</find>
+      <find>committee_subcommittee</find>
+      <find>house_committee_relational_table</find>
+      <find>house_com_rel_table</find>
+      <find>insert_house_committee</find>
+      <find>insert_senate_committee</find>
+      <find>house_committee</find>
+      <find>Veterans'</find>
+      <find>create_house_committee_table</find>
+      <find>insert_house_committee_115</find>
     </findStrings>
     <replaceStrings>
       <replace>''</replace>
+      <replace>Veterans''</replace>
+      <replace>Pallone</replace>
+      <replace>Veterans</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -50,15 +75,20 @@
         <option value="$PROJECT_DIR$/webscraping/csv_data/house_bills_116.csv" />
         <option value="$PROJECT_DIR$/webscraping/csv_data/senate_bills_115.csv" />
         <option value="$PROJECT_DIR$/webscraping/csv_data/senate_bills_116.csv" />
+        <option value="$PROJECT_DIR$/webscraping/committeeyamlscraper.py" />
+        <option value="$PROJECT_DIR$/webscraping/csv_data/house_committee_membership_115.csv" />
+        <option value="$PROJECT_DIR$/webscraping/csv_data/house_committee_membership_116.csv" />
+        <option value="$PROJECT_DIR$/webscraping/csv_data/senate_committee_membership_115.csv" />
+        <option value="$PROJECT_DIR$/webscraping/csv_data/senate_committee_membership_116.csv" />
         <option value="$PROJECT_DIR$/Data Ingestion Script/dataIngestion.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="323" />
-    <option name="y" value="38" />
-    <option name="width" value="1285" />
-    <option name="height" value="1040" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="222" />
+    <option name="y" value="17" />
+    <option name="width" value="1648" />
+    <option name="height" value="1039" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -157,6 +187,8 @@
       <updated>1581634170329</updated>
       <workItem from="1581634176547" duration="301000" />
       <workItem from="1582655114739" duration="9853000" />
+      <workItem from="1582845646206" duration="12983000" />
+      <workItem from="1583099354918" duration="11473000" />
     </task>
     <task id="LOCAL-00001" summary="Senators ingested, working on bills&#10;current issue - for some reason it is equating sponsor to bill name,&#10;even though it has been changed in both the schema and the insertion&#10;script.">
       <created>1582664344209</created>
@@ -165,37 +197,44 @@
       <option name="project" value="LOCAL" />
       <updated>1582664344209</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Current issue - unique key constraint on not found on a key explicitly&#10;declared as unique.">
+      <created>1582854953414</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1582854953414</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10154000" />
+    <option name="totallyTimeSpent" value="34610000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <frame x="178" y="14" width="1318" height="831" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Favorites" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1621984" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23412699" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Database Changes" />
-      <window_info anchor="bottom" id="Version Control" />
-      <window_info anchor="bottom" id="Python Console" />
-      <window_info anchor="bottom" id="Terminal" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32673267" />
+      <window_info active="true" anchor="bottom" id="Find" order="1" visible="true" weight="0.32956153" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.19142857" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="right" id="SciView" />
-      <window_info anchor="right" id="Database" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Database Changes" order="9" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Terminal" order="11" />
+      <window_info anchor="bottom" id="Python Console" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="SciView" order="3" />
+      <window_info anchor="right" id="Database" order="4" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -203,10 +242,11 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Senators ingested, working on bills&#10;current issue - for some reason it is equating sponsor to bill name,&#10;even though it has been changed in both the schema and the insertion&#10;script." />
-    <option name="LAST_COMMIT_MESSAGE" value="Senators ingested, working on bills&#10;current issue - for some reason it is equating sponsor to bill name,&#10;even though it has been changed in both the schema and the insertion&#10;script." />
+    <MESSAGE value="Current issue - unique key constraint on not found on a key explicitly&#10;declared as unique." />
+    <option name="LAST_COMMIT_MESSAGE" value="Current issue - unique key constraint on not found on a key explicitly&#10;declared as unique." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/congressionalDatabaseProject_Winter2020$dataIngestion.coverage" NAME="dataIngestion Coverage Results" MODIFIED="1582675997827" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Data Ingestion Script" />
+    <SUITE FILE_PATH="coverage/congressionalDatabaseProject_Winter2020$dataIngestion.coverage" NAME="dataIngestion Coverage Results" MODIFIED="1583135130197" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Data Ingestion Script" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/webscraping/csv_data/house_reps_116.csv">
@@ -254,10 +294,49 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/webscraping/csv_data/house_votes.csv">
+      <provider selected="true" editor-type-id="LargeFileEditor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webscraping/csv_data/115_committee_membership.csv" />
+    <entry file="file://$PROJECT_DIR$/webscraping/committeeyamlscraper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="313">
+          <caret line="90" column="36" selection-start-line="90" selection-start-column="36" selection-end-line="90" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webscraping/csv_data/house_committee_membership_116.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="2074" column="54" lean-forward="true" selection-start-line="2074" selection-start-column="54" selection-end-line="2074" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webscraping/csv_data/house_committee_membership_115.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="215" column="48" lean-forward="true" selection-start-line="215" selection-start-column="48" selection-end-line="215" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webscraping/csv_data/senate_committee_membership_116.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="262">
+          <caret line="19" column="48" lean-forward="true" selection-start-line="19" selection-start-column="48" selection-end-line="19" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webscraping/csv_data/senate_committee_membership_115.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="356">
+          <caret line="1389" column="29" selection-start-line="1389" selection-start-column="29" selection-end-line="1389" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Data Ingestion Script/dataIngestion.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="737" lean-forward="true" selection-start-line="737" selection-end-line="737" />
+        <state relative-caret-position="436">
+          <caret line="815" column="51" selection-start-line="815" selection-start-column="51" selection-end-line="815" selection-end-column="51" />
         </state>
       </provider>
     </entry>
