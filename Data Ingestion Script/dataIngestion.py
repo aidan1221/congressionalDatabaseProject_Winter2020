@@ -184,7 +184,7 @@ def create_house_subcommittee_table_115():
     try:
         curs.execute("""
                 CREATE TABLE IF NOT EXISTS house_subcommittee_115 (
-                hsubc_name varchar(255) NOT NULL,
+                hsubc_name varchar(255) UNIQUE NOT NULL,
                 sc_of varchar(255) REFERENCES house_committee_115(hc_name),
                 chair varchar(255) REFERENCES representative_115(rep_name),
                 PRIMARY KEY (hsubc_name, sc_of)
@@ -205,7 +205,7 @@ def create_house_subcommittee_table_116():
     try:
         curs.execute("""
                 CREATE TABLE IF NOT EXISTS house_subcommittee_116 (
-                hsubc_name varchar(255) NOT NULL,
+                hsubc_name varchar(255) UNIQUE NOT NULL,
                 sc_of varchar(255) REFERENCES house_committee_116(hc_name),
                 chair varchar(255) REFERENCES representative_116(rep_name),
                 PRIMARY KEY (hsubc_name, sc_of)
@@ -771,7 +771,7 @@ def insert_house_committee_115():
                     """ % (row['Committee'], row['Name']))
 
         connection.commit()
-        print("Added house committees and subcommittees for 115th session.")
+        print("Added house committees for 115th session.")
 
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
@@ -796,21 +796,22 @@ def insert_house_committee_116():
                     """ % (row['Committee'], row['Name']))
 
         connection.commit()
-        print("Added house committees and subcommittees for 116th session.")
+        print("Added house committees for 116th session.")
 
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
 
-def insert_house_subcommittee_115():            # TODO - you are here
+def insert_house_subcommittee_115():
     try:
         curs = connection.cursor()
 
-        subcommittees = pd.read_csv('..\webscraping\csv_data\\house_committee_membership_116.csv')
+        subcommittees = pd.read_csv('..\webscraping\csv_data\\house_committee_membership_115.csv')
         for index, row in subcommittees.iterrows():
-            if row['Subcommittee'] not in (None, ""):
+            # print(row['Subcommittee'])
+            if isinstance(row['Subcommittee'], str):
                 if '"' in row['Subcommittee']:
                     row['Subcommittee'] = row['Subcommittee'][1:-1]
-                if '"' in row ['Committee']:
+                if '"' in row['Committee']:
                     row['Committee'] = row['Committee'][1:-1]
                 curs.execute("""
                 INSERT INTO house_subcommittee_115(hsubc_name, sc_of)
@@ -821,11 +822,117 @@ def insert_house_subcommittee_115():            # TODO - you are here
                 ON CONFLICT DO NOTHING
                 """ % (row['Subcommittee'], row['Committee']))
 
+        connection.commit()
+        print("Subcommittee data for 115th session created.")
+
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+
+def insert_house_subcommittee_116():
+    try:
+        curs = connection.cursor()
+
+        subcommittees = pd.read_csv('..\webscraping\csv_data\house_committee_membership_116.csv')
+        for index, row in subcommittees.iterrows():
+            # print(row['Subcommittee'])
+            if isinstance(row['Subcommittee'], str):
+                if '"' in row['Subcommittee']:
+                    row['Subcommittee'] = row['Subcommittee'][1:-1]
+                if '"' in row['Committee']:
+                    row['Committee'] = row['Committee'][1:-1]
+                curs.execute("""
+                INSERT INTO house_subcommittee_115(hsubc_name, sc_of)
+                VALUES
+                (
+                '%s', '%s'
+                )
+                ON CONFLICT DO NOTHING
+                """ % (row['Subcommittee'], row['Committee']))
+
+        connection.commit()
+        print("Subcommittee data for 116th session created.")
+
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+
+def insert_house_com_rel_115():
+    try:
+        curs = connection.cursor()
+
+        relation = pd.read_csv('..\webscraping\csv_data\house_committee_membership_115.csv')
+        for index, row in relation.iterrows():
+            if isinstance(row['Subcommittee'], str):
+                if '"' in row['Subcommittee']:
+                    row['Subcommittee'] = row['Subcommittee'][1:-1]
+                if '"' in row['Committee']:
+                    row['Committee'] = row['Committee'][1:-1]
+                curs.execute("""
+                INSERT INTO house_com_rel_115(rep_name, hc_name, hsubc_name, title)
+                VALUES
+                (
+                '%s"', '%s"', '%s"', '%s"'
+                )
+                """ % (row['Name'], row['Committee'], row['Subcommittee'], row['Title']))
+            if isinstance(row['Subcommittee'], str):
+                if '"' in row['Subcommittee']:
+                    row['Subcommittee'] = row['Subcommittee'][1:-1]
+                if '"' in row['Committee']:
+                    row['Committee'] = row['Committee'][1:-1]
+                curs.execute("""
+                INSERT INTO house_com_rel_115(rep_name, hc_name, hsubc_name, title)
+                VALUES
+                (
+                '%s"', '%s"', '%s"', '%s"'
+                )
+                """ % (row['Name'], row['Committee'], row['Subcommittee'], row['Title']))
+
+        connection.commit()
+        print("House committee relational table created for 115th Session")
+
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+
+def insert_house_com_rel_116():
+    try:
+        curs = connection.cursor()
+
+        relation = pd.read_csv('..\webscraping\csv_data\house_committee_membership_115.csv')
+        for index, row in relation.iterrows():
+            if isinstance(row['Subcommittee'], str):
+                if '"' in row['Subcommittee']:
+                    row['Subcommittee'] = row['Subcommittee'][1:-1]
+                if '"' in row['Committee']:
+                    row['Committee'] = row['Committee'][1:-1]
+                curs.execute("""
+                INSERT INTO house_com_rel_116(rep_name, hc_name, hsubc_name, title)
+                VALUES
+                (
+                '%s"', '%s"', '%s"', '%s"'
+                )
+                """ % (row['Name'], row['Committee'], row['Subcommittee'], row['Title']))
+            if isinstance(row['Subcommittee'], str):
+                if '"' in row['Subcommittee']:
+                    row['Subcommittee'] = row['Subcommittee'][1:-1]
+                if '"' in row['Committee']:
+                    row['Committee'] = row['Committee'][1:-1]
+                curs.execute("""
+                INSERT INTO house_com_rel_116(rep_name, hc_name, hsubc_name, title)
+                VALUES
+                (
+                '%s"', '%s"', '%s"', '%s"'
+                )
+                """ % (row['Name'], row['Committee'], row['Subcommittee'], row['Title']))
+
+        connection.commit()
+        print("House committee relational table created for 116th Session")
+
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
 
 # --------------------------------------------------------------------------------------
-
 '''
 Senate Insertion script functions - there aren't any supplementary cleanup functions for
 these functions.
@@ -982,6 +1089,62 @@ def insert_senate_committee_116():
     except pg.OperationalError as err:
         throw_psycopg2_exception(err)
 
+
+def insert_senate_subcommittee_115():
+    try:
+        curs = connection.cursor()
+
+        subcommittees = pd.read_csv('..\webscraping\csv_data\\senate_committee_membership_115.csv')
+        for index, row in subcommittees.iterrows():
+            # print(row['Subcommittee'])
+            if isinstance(row['Subcommittee'], str):
+                if '"' in row['Subcommittee']:
+                    row['Subcommittee'] = row['Subcommittee'][1:-1]
+                if '"' in row['Committee']:
+                    row['Committee'] = row['Committee'][1:-1]
+                curs.execute("""
+                INSERT INTO senate_subcommittee_115(ssubc_name, sc_of)
+                VALUES
+                (
+                '%s', '%s'
+                )
+                ON CONFLICT DO NOTHING
+                """ % (row['Subcommittee'], row['Committee']))
+
+        connection.commit()
+        print("Subcommittee data for 115th session created.")
+
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+
+def insert_senate_subcommittee_116():
+    try:
+        curs = connection.cursor()
+
+        subcommittees = pd.read_csv('..\webscraping\csv_data\\senate_committee_membership_116.csv')
+        for index, row in subcommittees.iterrows():
+            # print(row['Subcommittee'])
+            if isinstance(row['Subcommittee'], str):
+                if '"' in row['Subcommittee']:
+                    row['Subcommittee'] = row['Subcommittee'][1:-1]
+                if '"' in row['Committee']:
+                    row['Committee'] = row['Committee'][1:-1]
+                curs.execute("""
+                INSERT INTO senate_subcommittee_116(ssubc_name, sc_of)
+                VALUES
+                (
+                '%s', '%s'
+                )
+                ON CONFLICT DO NOTHING
+                """ % (row['Subcommittee'], row['Committee']))
+
+        connection.commit()
+        print("Subcommittee data for 116th session created.")
+
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
 # --------------------------------------------------------------------------------------
 
 
@@ -1013,14 +1176,16 @@ def insert_senate_committee_116():
 
 # fix_reps_115_csv()                             # Executed
 # fix_reps_116_csv()                             # Executed
-# insert_reps_115()                              # Executed
+insert_reps_115()                              # Executed
 # insert_reps_116()                              # Executed
 # insert_house_resolutions_115()                 # Executed
 # insert_house_resolutions_116()                 # Executed
 # insert_house_committee_115()                   # Executed
 # insert_house_committee_116()                   # Executed
-insert_house_subcommittee_115()
-# insert_house_subcommittee_116()
+# insert_house_subcommittee_115()                # Executed
+# insert_house_subcommittee_116()                # Executed
+insert_house_com_rel_115()
+insert_house_com_rel_116()
 
 # insert_sen_115()                               # Executed
 # insert_sen_116()                               # Executed
@@ -1028,24 +1193,7 @@ insert_house_subcommittee_115()
 # insert_sen_bills_116()                         # Executed
 # insert_senate_committee_115()                  # Executed
 # insert_senate_committee_116()                  # Executed
-# insert_senate_subcommittee_115()
-# insert_senate_subcommittee_116()
-
-'''
-        for index, row in committees.iterrows():
-            if row[1] in (None, ""):
-                pass
-            else:
-                if '"' in row['Subcommittee']:
-                    row['Subcommittee'] = row['Subcommittee'][1:-1]
-                if row['Title'] == 'Chair' and row['Subcommittee']:
-                    curs.execute("""
-                    INSERT INTO house_subcommittee_115(hsubc_name, sc_of)
-                    VALUES
-                    (
-                    '%s', '%s'
-                    )
-                    ON CONFLICT DO NOTHING
-                    """) % (row['Subcommittee'], row['Committee'])
-
-'''
+# insert_senate_subcommittee_115()               # Executed
+# insert_senate_subcommittee_116()               # Executed
+# insert_senate_com_rel_115()
+# insert_senate_com_rel_116()
