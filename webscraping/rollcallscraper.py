@@ -16,7 +16,7 @@ class Rollcallscraper(Webscraper):
 
     HOUSE_URLS_115 = [HOUSE_115_1,HOUSE_115_2]
     HOUSE_URLS_116 = [HOUSE_116_1,HOUSE_116_2]
-    HOUSE_URLS_LIST = [HOUSE_URLS_115,HOUSE_URLS_116]
+    # HOUSE_URLS_LIST = [HOUSE_URLS_115,HOUSE_URLS_116]
 
     SENATE_116_1 = "https://www.senate.gov/legislative/LIS/roll_call_lists/vote_menu_116_1.htm"
     SENATE_116_2 = "https://www.senate.gov/legislative/LIS/roll_call_lists/vote_menu_116_2.htm"
@@ -29,19 +29,20 @@ class Rollcallscraper(Webscraper):
         self.bill_count =0
         self.roll_call_dict = self.build_data_dict(['session', 'roll_num', 'date', 'issue', 'question', 'result', 'title'])
 
-    def roll_call_scrape(self):
+    def roll_call_scrape(self, session_number):
         votes_list = []
         #call for each house URL
-        for SESSION in self.HOUSE_URLS_LIST:
-            session_number=115
-            for HOUSE_URL in SESSION:
-                self.open_url(HOUSE_URL)
-                self.get_page_data(HOUSE_URL,session_number, votes_list)
-                session_number+=1
-        roll_call_csv_file = "house_roll_call.csv"
+        if session_number == 115:
+            urls_list = self.HOUSE_URLS_115
+        elif session_number == 116:
+            urls_list = self.HOUSE_URLS_116
+        for url in urls_list:
+            self.open_url(url)
+            self.get_page_data(url,session_number, votes_list)
+        roll_call_csv_file = f"house_roll_call_{session_number}.csv"
         self.csv_from_dict(roll_call_csv_file, self.roll_call_dict)
-        roll_call_votes_csv_file = "house_votes.csv"
-        self.csv_from_tuple_list(roll_call_votes_csv_file, votes_list, ['session', 'bill_num', 'vote', 'member'])
+        roll_call_votes_csv_file = f"house_votes_{session_number}.csv"
+        self.csv_from_tuple_list(roll_call_votes_csv_file, votes_list, ['session', 'bill_num', 'vote', 'member', 'party'])
 
     def get_page_data(self, HOUSE_URL,session_number, votes_list):
         """parses beautiful soup object of current page's html for desired roll call page"""
@@ -93,16 +94,36 @@ class Rollcallscraper(Webscraper):
             table_data = str(table_data)
             table_data = table_data.replace('<td valign="top" width="33.3%">', '')
             table_data = table_data.replace('</td>', '')
-            table_data = table_data.replace('<i>', '')
-            table_data = table_data.replace('</i>', '')
-            table_data = table_data.replace('<br/>', ', ')
             table_data = table_data.replace('\n', '')
             table_data = table_data.replace('[', '')
             table_data = table_data.replace(']', '')
-            member_list = table_data.split(',')
+            table_data = table_data.replace(',', '')
+            member_list = table_data.split('<br/>')
             for member in member_list:
+                if '<i>' in member:
+                    if session_number == 115:
+                        party = 'D'
+                    else:
+                        party = 'R'
+                    member = member.replace('<i>', '')
+                    member = member.replace('</i>', '')
+                elif '<u>' in member:
+                    party = 'I'
+                    member = member.replace('<u>', '')
+                    member = member.replace('</u>', '')
+                else:
+                    if session_number == 115:
+                        party = 'R'
+                    else:
+                        party = 'D'
                 decoded_member = ud.unidecode(member)
-                votes_list.append((session_number, bill_number, vote_value, decoded_member))
+                print(decoded_member, party, session_number)
+                votes_list.append((session_number, bill_number, vote_value, decoded_member, party))
+
+            # for member in member_list:
+            #     decoded_member = ud.unidecode(member)
+            #     print(decoded_member)
+            #     votes_list.append((session_number, bill_number, vote_value, decoded_member))
 
     def scrape_roll_call_nav(self,session_number):
         soup = self.get_html_soup()

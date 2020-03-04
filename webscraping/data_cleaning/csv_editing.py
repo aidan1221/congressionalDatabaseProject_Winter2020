@@ -3,7 +3,6 @@ import pandas as pd
 
 class CSV_Editor:
 
-
     @staticmethod
     def clean_house_representative_data_csv(csv_file):
         df = pd.read_csv(csv_file)
@@ -297,3 +296,128 @@ class CSV_Editor:
 
         committee_file.to_csv(csv_file, index=False, encoding='utf-8')
 
+    @staticmethod
+    def create_roll_call_dictionary(csv_file):
+        df = pd.read_csv(csv_file)
+        d_wow = dict()
+        for _, row in df.iterrows():
+            full_name = row['Name']
+            last_name = full_name.split()[-1]
+            if last_name in d_wow:
+                d_wow[last_name][full_name] = row['State']
+            else:
+                d_wow[last_name] = dict()
+                d_wow[last_name][full_name] = row['State']
+        return d_wow
+
+    @staticmethod
+    def clean_roll_call_member(csv_file, rc_file):
+        votes_file = pd.read_csv(rc_file)
+        member_dict = CSV_Editor.create_roll_call_dictionary(csv_file)
+
+        for _, row in votes_file.iterrows():
+            name_split = str(row['member']).split()
+            # party = str(row['party'])
+            state = ''
+            short_name = ''
+            full_name = ''
+            if len(name_split) == 0:
+                continue
+            if len(name_split) == 1:
+                short_name = name_split[0]
+                print(f"replacing {row['member']} with {name_split[0]}")
+                row['member'] = name_split[0]
+
+
+            #
+            #         correct_matches[short_name]: result[0]
+            #     if len(result) > 1:
+            #         print(result)
+
+
+            # elif len(name_split) > 1:
+            #     for entry in name_split:
+            #         if '(' in entry:
+            #             state = entry.strip('(')
+            #             state = state.strip(')')
+            #         else:
+            #             long_name = long_name + ' ' + entry
+            # print(short_name, long_name, state, party)
+
+            # correct_matches[name] =
+            # result = ref_df[(ref_df['Name'].str.contains(short_name)) & (ref_df['State'].str.contains(state))]
+            # print(result)
+            # print(len(result))
+            # if len(result) > 1:
+            #     possible_matches = list()
+            #     for
+            #     try:
+            #         print(f"Is this a match for {long_name}?")
+            #         print(result)
+
+            #             correct_name = correct_matches[row['member']]
+            #             print(f"replacing {row['member']} with {correct_name}")
+            #             row['member'] = correct_name
+            #
+            #         except:
+            #             for poss in possible_matches:
+            #                 print("correct(?): " + poss)
+            #                 print("to be replaced: " + ' '.join(name_split))
+            #                 answer = input('Replace with correct?\n>')
+            #                 if answer == 'y':
+            #                     correct_matches[row['Name']] = poss
+            #                     row['member'] = poss
+            #                     break
+
+            # print(name_split, party)
+            # if len(name_split) == 1:
+            #     result = ref_df[ref_df['Name'].str.contains(name_split[0])]
+            #     print(result)
+            #
+            # if len(name_split) > 1:
+            #     if '(' in name_split[1]:
+            #         state = name_split[1].strip('(')
+            #         state = state.strip(')')
+            #         state_result = ref_df[ref_df['State'].str.contains(state)]
+            #         result = state_result[state_result['Name'].str.contains(name_split[0])]
+            #         print(result)
+            #     else:
+            #         name = name_split[0] + ' ' + name_split[1]
+            #         print(f"name: {name}")
+            #         result = ref_df[ref_df['Name'].str.contains(name)]
+            #         print(result)
+
+            # if len(result) == 1:
+            # result = names.str.contains(name_split[0])
+            # print(names)
+            possible_matches = list()
+
+        #     for n in names:
+        #         match_count = 0
+        #         for part in name_split:
+        #             if part in n:
+        #                 match_count += 1
+        #         if match_count > 1:
+        #             possible_matches.append(n)
+        #     if len(possible_matches) > 1:
+        #         try:
+        #             correct_name = correct_matches[row['member']]
+        #             print(f"replacing {row['member']} with {correct_name}")
+        #             row['member'] = correct_name
+        #
+        #         except:
+        #             for poss in possible_matches:
+        #                 print("correct(?): " + poss)
+        #                 print("to be replaced: " + ' '.join(name_split))
+        #                 answer = input('Replace with correct?\n>')
+        #                 if answer == 'y':
+        #                     correct_matches[row['Name']] = poss
+        #                     row['member'] = poss
+        #                     break
+        #     elif len(possible_matches) == 1:
+        #         print(f"replacing {row['member']} with {possible_matches[0]}")
+        #         row['member'] = possible_matches[0]
+        #     else:
+        #         input(f"NO MATCHES FOUND for {' '.join(name_split)}")
+        #
+        # votes_file.to_csv(csv_file, index=False, encoding='utf-8')
