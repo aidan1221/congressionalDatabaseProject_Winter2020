@@ -241,3 +241,21 @@ class CSV_Editor:
 
         bill_file.to_csv(csv_file, index=False, encoding='utf-8')
 
+
+    @staticmethod
+    def test_dictionary_creation(csv_file):
+        df = pd.read_csv(csv_file)
+        d_wow = dict()
+
+        for _,row in df.iterrows():
+
+            full_name = row['Name']
+            
+            last_name = full_name.split()[-1]
+            if last_name in d_wow:
+                d_wow[last_name][full_name] = row['State']
+            else:
+                d_wow[last_name] = dict()
+                d_wow[last_name][full_name] = row['State']
+
+        return d_wow
