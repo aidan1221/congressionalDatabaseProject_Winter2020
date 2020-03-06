@@ -33,5 +33,9 @@ house_roll_call_votes_116 = '../csv_data/house_votes_116.csv'
 # csve.clean_committees_names(committees_115, 115)
 # csve.clean_committees_names(committees_116, 116)
 
-csve.clean_roll_call_member(house_reps_115, house_roll_call_votes_115)
-csve.clean_roll_call_member(house_reps_116, house_roll_call_votes_116)
+# csve.clean_roll_call_member(house_reps_115, house_roll_call_votes_115)
+# csve.clean_roll_call_member(house_reps_116, house_roll_call_votes_116)
+
+csve.drop_nan(house_roll_call_votes_115)
+csve.drop_nan(house_roll_call_votes_116)
+

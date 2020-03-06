@@ -114,9 +114,6 @@ class CSV_Editor:
 
         return dataframe
 
-
-
-
     @staticmethod
     def print_df_types(dataframe):
 
@@ -463,3 +460,16 @@ class CSV_Editor:
             row['vote'] = vote_str
 
         votes_file.to_csv(csv_file, index=False, encoding='utf-8')
+
+    #There is a more elegant way to do this, but here we are
+    @staticmethod
+    def drop_nan_roll_call(csv_file):
+        df = pd.read_csv(csv_file)
+        df.dropna()
+        df = df[df.vote != 'NOES    ']
+        df = df[df.vote != 'NAYS    ']
+        df = df[df.vote != 'NOES    ']
+        df = df[df.vote != 'YEAS    ']
+        df = df[df.vote != 'AYES    ']
+        df = df[df.vote != 'NOT VOTI']
+        df.to_csv(csv_file, index=False, encoding='utf-8')
