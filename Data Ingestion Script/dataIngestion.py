@@ -1199,8 +1199,8 @@ def insert_senate_com_rel_116():
 # create_house_subcommittee_table_116()          # Created
 # create_house_com_rel_table_115()               # Created
 # create_house_com_rel_table_116()               # Created
-# create_house_resolution_cosponsors_table_115() # Not Created
-# create_house_resolution_cosponsors_table_116() #
+# create_house_resolution_cosponsors_table_115() # Created
+# create_house_resolution_cosponsors_table_116() # Created
 
 # create_sen_table_115()                         # Created
 # create_sen_table_116()                         # Created
@@ -1210,10 +1210,10 @@ def insert_senate_com_rel_116():
 # create_senate_committee_table_116()            # Created
 # create_senate_subcommittee_table_115()         # Created
 # create_senate_subcommittee_table_116()         # Created
-# create_senate_com_rel_table_115()              # Not Created
-# create_senate_com_rel_table_116()              # Not Created
-# create_sen_bill_cosponsors_table_115()         # Not Created
-# create_sen_bill_cosponsors_table_116()         # Not Created
+# create_senate_com_rel_table_115()              # Created
+# create_senate_com_rel_table_116()              # Created
+# create_sen_bill_cosponsors_table_115()         # Created
+# create_sen_bill_cosponsors_table_116()         # Created
 
 # fix_reps_115_csv()                             # DO NOT RUN
 # fix_reps_116_csv()                             # DO NOT RUN
@@ -1226,7 +1226,7 @@ def insert_senate_com_rel_116():
 # insert_house_subcommittee_115()                # Executed
 # insert_house_subcommittee_116()                # Executed
 # insert_house_com_rel_115()                     # Executed
-insert_house_com_rel_116()
+# insert_house_com_rel_116()                     # Executed
 
 # insert_sen_115()                               # Executed
 # insert_sen_116()                               # Executed
@@ -1236,5 +1236,5 @@ insert_house_com_rel_116()
 # insert_senate_committee_116()                  # Executed
 # insert_senate_subcommittee_115()               # Executed
 # insert_senate_subcommittee_116()               # Executed
-# insert_senate_com_rel_115()
-insert_senate_com_rel_116()
+# insert_senate_com_rel_115()                    # Executed
+# insert_senate_com_rel_116()                    # Executed
