@@ -378,15 +378,14 @@ class CSV_Editor:
             elif full_name == 'Michael F. Q. San Nicolas':
                 last_name = 'San Nicolas'
             elif full_name == 'Tom OHalleran':
-                last_name = "O\'Halleran"
+                last_name = "O'Halleran"
             elif full_name == 'Beto ORourke':
-                last_name = "O\'Rourke"
+                last_name = "O'Rourke"
             else:
                 last_name = full_name.split()[-1]
 
             d_full_name[last_name] = full_name
             d_state[last_name + ' (' + row['State'] + ')'] = full_name
-        print(d_full_name)
         return d_full_name, d_state
 
     @staticmethod
@@ -397,16 +396,14 @@ class CSV_Editor:
         for _, row in votes_file.iterrows():
             member_name = str(row['member'])
 
-            if member_name == '':
-                continue
-            if member_name == 'nan':
-                continue
             if member_name[0] == ' ':
                 member_name = member_name[1:]
-                print(member_name)
 
-            if "\'" in member_name:
-                print(member_name)
+            if member_name == '':
+                continue
+
+            if member_name == 'nan':
+                continue
 
             # This one is weird - Walter B. Jones is 'Jones' in roll call
             # until Brenda Jones replaced John Conyers mid-term...
@@ -441,10 +438,10 @@ class CSV_Editor:
                 key_name = 'Maxine Waters'
             elif member_name == 'Green (TX)':
                 key_name = 'Al Green'
-            elif member_name == "O'Halleran":
-                key_name = 'Tom OHalleran'
             elif member_name == 'Roe (TN)':
-                key_name = "David P. Roe"
+                key_name = 'David P. Roe'
+            elif member_name == 'Hern':
+                key_name = 'Kevin Hern'
             elif '(' in member_name:
                 key_name = member_state_dict[member_name]
             else:
@@ -453,4 +450,15 @@ class CSV_Editor:
             print(f"replacing {row['member']} with {key_name}")
             row['member'] = key_name
 
-        # votes_file.to_csv(csv_file, index=False, encoding='utf-8')
+            if 'NOT' in row['vote']:
+                vote_str = 'NV'
+
+            elif 'AYES' in row['vote']:
+                vote_str = 'Y'
+            else:
+                vote_str = row['vote'][0]
+
+            # print(f"replacing {row['vote']} with {vote_str}")
+            row['vote'] = vote_str
+
+        votes_file.to_csv(csv_file, index=False, encoding='utf-8')
