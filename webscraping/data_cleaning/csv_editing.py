@@ -391,6 +391,8 @@ class CSV_Editor:
     @staticmethod
     def clean_roll_call_member(member_file, csv_file):
         votes_file = pd.read_csv(csv_file)
+        votes_file = votes_file.astype(str)
+
         member_dict, member_state_dict = CSV_Editor.create_roll_call_dictionary(member_file)
 
         for _, row in votes_file.iterrows():
@@ -458,7 +460,6 @@ class CSV_Editor:
             else:
                 vote_str = row['vote'][0]
 
-            # print(f"replacing {row['vote']} with {vote_str}")
             row['vote'] = vote_str
 
         votes_file.to_csv(csv_file, index=False, encoding='utf-8')
