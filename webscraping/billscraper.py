@@ -1,6 +1,7 @@
 from webscraper import Webscraper
 import sys
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException
 
 class Billscraper(Webscraper):
 
@@ -164,12 +165,35 @@ class Billscraper(Webscraper):
 
             reps = self.find_elements_by_css("li span > a")
 
-            for i in range(1, len(reps) + 1, 2):
+            searchPage = self.DRIVER.current_url
 
-                rep = self.find_element_by_css(f"li:nth-of-type({i}) span > a")
+            num_reps = len(reps) + 1
+
+            for i in range(1, num_reps, 2):
+
+                if i > num_reps:
+                    break
+                try:
+                    self.wait_for_page_loaded()
+                except:
+                    continue
+                try:
+                    rep = self.find_element_by_css(f"li:nth-of-type({i}) span > a")
+                except Exception as e:
+                    self.log_error(e)
+                    break;
                 rep_name = rep.text
 
-                rep.click()
+                try:
+                    rep.click()
+                except:
+                    try:
+                        self.wait(1)
+                        rep = self.find_element_by_css(f"li:nth-of-type({i}) span > a")
+                        rep_name = rep.text
+                        rep.click()
+                    except Exception as e:
+                        self.log_error(e.with_traceback())
                 self.find_element_by_css("#facetItemsponsorshipCosponsored_Legislation").click()
                 self.wait_for_page_loaded()
                 self.find_element_by_css("#facetItemcongress116__2019_2020_").click()
@@ -179,7 +203,10 @@ class Billscraper(Webscraper):
                 self.wait(2)
                 self.find_element_by_css("#facetItemtypeBills__H_R__or_S__").click()
 
-                self.wait_for_page_loaded()
+                try:
+                    self.wait_for_page_loaded()
+                except:
+                    continue
 
                 num_pages = self.get_number_of_search_pages()
 
@@ -202,13 +229,16 @@ class Billscraper(Webscraper):
                         data_dict["representative_cosponsor"].append(rep_name)
                         data_dict["bill_name"].append(name)
 
+                    self.wait(1)
                     self.click_to_next_page(a + 1, num_pages)
 
-                self.find_element_by_css("#content > div.featured > nav > div.pn-count-container > a").click()
+                self.DRIVER.get(searchPage)
 
             self.click_to_next_page(i + 1, num_rep_pages)
 
         self.csv_from_dict("hr_cosponsors_116.csv", data_dict)
+
+        return True
 
     def get_current_bills_page(self, current_page, current_bills_url):
 
@@ -308,8 +338,18 @@ class Billscraper(Webscraper):
             self.log(f"Clicking to the next page - {current_page + 1}")
 
             # assert len(names) == 100 * (current_page+1), "len(names) = {}".format(len(names))
-            next_page_button = self.find_element_by_css(self.NEXT_PAGE_SELECTOR)
-            next_page_button.click()
+            self.wait_for_element_present_by_css(self.NEXT_PAGE_SELECTOR)
+            try:
+                next_page_button = self.find_element_by_css(self.NEXT_PAGE_SELECTOR)
+                next_page_button.click()
+            except:
+                self.wait(3)
+                try:
+                    next_page_button = self.find_element_by_css(self.NEXT_PAGE_SELECTOR)
+                    next_page_button.click()
+                except:
+                    self.log_error("Next page click FAILED")
+                    pass
 
         else:
             self.log(f"Last page reached - {current_page}")
@@ -324,7 +364,11 @@ class Billscraper(Webscraper):
         self.log("Getting total number of pages for search")
 
         page_selector = "#searchTune > div.basic-search-tune-number > div > span.results-number"
-        page_element = self.find_element_by_css(page_selector)
+        try:
+            page_element = self.find_element_by_css(page_selector)
+        except NoSuchElementException as nse:
+            self.log("Page number element not found")
+            return 1
 
         return int(page_element.text.split()[1])
 
