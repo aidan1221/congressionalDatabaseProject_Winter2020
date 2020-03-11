@@ -221,6 +221,98 @@ def create_house_subcommittee_table_116():
 
 
 # --------------------------------------------------------------------------------------
+
+
+def create_house_roll_call_115():
+    curs = connection.cursor()
+
+    try:
+        curs.execute("""
+                CREATE TABLE IF NOT EXISTS house_roll_call_115 (
+                session integer,
+                roll_num varchar(255) NOT NULL,
+                date varchar(255) NOT NULL,
+                issue varchar(255),
+                question varchar(255),
+                result varchar(255),
+                title varchar(1000),
+                PRIMARY KEY (roll_num, date)
+                );
+        """)
+        connection.commit()
+        print("Operation Succeeded - House Roll Call 115th session table created!")
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+
+def create_house_roll_call_116():
+    curs = connection.cursor()
+
+    try:
+        curs.execute("""
+                CREATE TABLE IF NOT EXISTS house_roll_call_116 (
+                session integer,
+                roll_num varchar(255) NOT NULL,
+                date varchar(255) NOT NULL,
+                issue varchar(255),
+                question varchar(255),
+                result varchar(255),
+                title varchar(1000),
+                PRIMARY KEY (roll_num, date)
+                );
+        """)
+        connection.commit()
+        print("Operation Succeeded - House Roll 116th session table created!")
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+# --------------------------------------------------------------------------------------
+
+
+def create_house_votes_115_table():
+    curs = connection.cursor()
+
+    try:
+        curs.execute("""
+                CREATE TABLE IF NOT EXISTS house_votes_115 (
+                vote_id integer DEFAULT NEXTVAL('house_votes_115_id_seq'),
+                session integer NOT NULL,
+                res_name varchar(255) NOT NULL,
+                member varchar(255) REFERENCES representative_115(rep_name),
+                party varchar(255),
+                vote varchar (255),
+                PRIMARY KEY (vote_id)
+                );
+        """)
+        connection.commit()
+        print("Operation Succeeded - House Votes 115th session table created!")
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+
+def create_house_votes_116_table():
+    curs = connection.cursor()
+
+    try:
+        curs.execute("""
+                CREATE TABLE IF NOT EXISTS house_votes_116 (
+                vote_id integer DEFAULT NEXTVAL('house_votes_116_id_seq'),
+                session integer NOT NULL,
+                res_name varchar(255) NOT NULL,
+                member varchar(255) REFERENCES representative_116(rep_name),
+                party varchar(255),
+                vote varchar (255),
+                PRIMARY KEY (vote_id)
+                );
+        """)
+        connection.commit()
+        print("Operation Succeeded - House Votes 116th session table created!")
+    except pg.OperationalError as err:
+        throw_psycopg2_exception(err)
+
+# --------------------------------------------------------------------------------------
+
+# --------------------------------------------------------------------------------------
 '''
 Create house committee relational table
 '''
@@ -1179,6 +1271,17 @@ def insert_senate_com_rel_116():
                 )
                 ON CONFLICT DO NOTHING
                 """ % (row['Name'], row['Committee'], row['Subcommittee'], row['Title']))
+            if isinstance(row['Subcommittee'], float):
+                if '"' in row ['Committee']:
+                    row['Committee'] = row['Committee'][1:-1]
+                curs.execute("""
+                INSERT INTO senate_com_rel_116(sen_name, sc_name, title)
+                VALUES
+                (
+                '%s', '%s', '%s'
+                )
+                ON CONFLICT DO NOTHING
+                """ % (row['Name'], row['Committee'], row['Title']))
 
         connection.commit()
         print("Senate committee and subcommittee membership relational data for 116th session created.")
@@ -1211,7 +1314,7 @@ def insert_senate_com_rel_116():
 # create_senate_subcommittee_table_115()         # Created
 # create_senate_subcommittee_table_116()         # Created
 # create_senate_com_rel_table_115()              # Created
-# create_senate_com_rel_table_116()              # Created
+create_senate_com_rel_table_116()              # Created
 # create_sen_bill_cosponsors_table_115()         # Created
 # create_sen_bill_cosponsors_table_116()         # Created
 
@@ -1237,4 +1340,4 @@ def insert_senate_com_rel_116():
 # insert_senate_subcommittee_115()               # Executed
 # insert_senate_subcommittee_116()               # Executed
 # insert_senate_com_rel_115()                    # Executed
-# insert_senate_com_rel_116()                    # Executed
+insert_senate_com_rel_116()                    # Executed
