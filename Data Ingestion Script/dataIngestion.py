@@ -970,6 +970,17 @@ def insert_house_com_rel_115():
                 )
                 ON CONFLICT DO NOTHING
                 """ % (row['Name'], row['Committee'], row['Subcommittee'], row['Title']))
+            if isinstance(row['Subcommittee'], float):
+                if '"' in row['Committee']:
+                    row['Committee'] = row['Committee'][1:-1]
+                curs.execute("""
+                INSERT INTO house_com_rel_115(rep_name, hc_name, title)
+                VALUES
+                (
+                '%s', '%s', '%s'
+                )
+                ON CONFLICT DO NOTHING
+                """ % (row['Name'], row['Committee'], row['Title']))
 
         connection.commit()
         print("Committee and subcommittee membership relational data for 115th session created.")
@@ -999,6 +1010,17 @@ def insert_house_com_rel_116():
                 )
                 ON CONFLICT DO NOTHING
                 """ % (row['Name'], row['Committee'], row['Subcommittee'], row['Title']))
+            if isinstance(row['Subcommittee'], float):
+                if '"' in row['Committee']:
+                    row['Committee'] = row['Committee'][1:-1]
+                curs.execute("""
+                INSERT INTO senate_com_rel_116(rep_name, hc_name, title)
+                VALUES
+                (
+                '%s', '%s', '%s'
+                )
+                ON CONFLICT DO NOTHING
+                """ % (row['Name'], row['Committee'], row['Title']))
 
         connection.commit()
         print("Committee and subcommittee membership relational data for 116th session created.")
@@ -1227,7 +1249,6 @@ def insert_senate_com_rel_115():
 
         subcommittees = pd.read_csv('..\webscraping\csv_data\senate_committee_membership_115.csv')
         for index, row in subcommittees.iterrows():
-            # print(row['Subcommittee'])
             if isinstance(row['Subcommittee'], str):
                 if '"' in row['Subcommittee']:
                     row['Subcommittee'] = row['Subcommittee'][1:-1]
@@ -1241,6 +1262,17 @@ def insert_senate_com_rel_115():
                 )
                 ON CONFLICT DO NOTHING
                 """ % (row['Name'], row['Committee'], row['Subcommittee'], row['Title']))
+            if isinstance(row['Subcommittee'], float):
+                if '"' in row['Committee']:
+                    row['Committee'] = row['Committee'][1:-1]
+                curs.execute("""
+                INSERT INTO senate_com_rel_115(sen_name, sc_name, title)
+                VALUES
+                (
+                '%s', '%s', '%s'
+                )
+                ON CONFLICT DO NOTHING
+                """ % (row['Name'], row['Committee'], row['Title']))
 
         connection.commit()
         print("Senate committee and subcommittee membership relational data for 115th session created.")
@@ -1272,7 +1304,7 @@ def insert_senate_com_rel_116():
                 ON CONFLICT DO NOTHING
                 """ % (row['Name'], row['Committee'], row['Subcommittee'], row['Title']))
             if isinstance(row['Subcommittee'], float):
-                if '"' in row ['Committee']:
+                if '"' in row['Committee']:
                     row['Committee'] = row['Committee'][1:-1]
                 curs.execute("""
                 INSERT INTO senate_com_rel_116(sen_name, sc_name, title)
@@ -1300,8 +1332,8 @@ def insert_senate_com_rel_116():
 # create_house_committee_table_116()             # Created
 # create_house_subcommittee_table_115()          # Created
 # create_house_subcommittee_table_116()          # Created
-# create_house_com_rel_table_115()               # Created
-# create_house_com_rel_table_116()               # Created
+create_house_com_rel_table_115()               # Created
+create_house_com_rel_table_116()               # Created
 # create_house_resolution_cosponsors_table_115() # Created
 # create_house_resolution_cosponsors_table_116() # Created
 
@@ -1314,7 +1346,7 @@ def insert_senate_com_rel_116():
 # create_senate_subcommittee_table_115()         # Created
 # create_senate_subcommittee_table_116()         # Created
 # create_senate_com_rel_table_115()              # Created
-create_senate_com_rel_table_116()              # Created
+# create_senate_com_rel_table_116()              # Created
 # create_sen_bill_cosponsors_table_115()         # Created
 # create_sen_bill_cosponsors_table_116()         # Created
 
@@ -1328,8 +1360,8 @@ create_senate_com_rel_table_116()              # Created
 # insert_house_committee_116()                   # Executed
 # insert_house_subcommittee_115()                # Executed
 # insert_house_subcommittee_116()                # Executed
-# insert_house_com_rel_115()                     # Executed
-# insert_house_com_rel_116()                     # Executed
+insert_house_com_rel_115()                     # Executed
+insert_house_com_rel_116()                     # Executed
 
 # insert_sen_115()                               # Executed
 # insert_sen_116()                               # Executed
@@ -1340,4 +1372,4 @@ create_senate_com_rel_table_116()              # Created
 # insert_senate_subcommittee_115()               # Executed
 # insert_senate_subcommittee_116()               # Executed
 # insert_senate_com_rel_115()                    # Executed
-insert_senate_com_rel_116()                    # Executed
+# insert_senate_com_rel_116()                    # Executed
