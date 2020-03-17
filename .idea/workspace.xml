@@ -319,10 +319,10 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.dataingestion" />
       <item itemvalue="Python.co_sponsor_scrape" />
-      <item itemvalue="Python.edit_files" />
       <item itemvalue="Python.data_analysis" />
+      <item itemvalue="Python.dataingestion" />
+      <item itemvalue="Python.edit_files" />
       <item itemvalue="Python.word_clouds" />
     </list>
   </component>
