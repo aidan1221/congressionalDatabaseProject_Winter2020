@@ -4,38 +4,32 @@ import pandas as pd
 
 house_reps_116 = "../csv_data/house_reps_116.csv"
 house_reps_115 = "../csv_data/house_reps_115.csv"
-senators_116 = "../csv_data/senators_116.csv"
-senators_115 = "../csv_data/senators_115.csv"
-
-house_bills_116 = "../csv_data/house_bills_116.csv"
-house_bills_115 = "../csv_data/house_bills_115.csv"
-senate_bills_116 = "../csv_data/senate_bills_116.csv"
-senate_bills_115 = "../csv_data/senate_bills_115.csv"
-
-committees_115 = '../csv_data/115_committee_membership.csv'
-committees_116 = '../csv_data/116_committee_membership.csv'
-
-house_roll_call_votes_115 = '../csv_data/house_votes_115.csv'
-house_roll_call_votes_116 = '../csv_data/house_votes_116.csv'
-
-# csve.clean_house_representative_data_csv(house_reps_116)
-# csve.clean_house_representative_data_csv(house_reps_115)
+# senators_116 = "../csv_data/senators_116.csv"
+# senators_115 = "../csv_data/senators_115.csv"
 #
-# csve.clean_house_representative_data_csv(senators_116)
-# csve.clean_house_representative_data_csv(senators_115)
-
-
-# csve.clean_bills_names(house_bills_116, "house", 116)
-# csve.clean_bills_names(house_bills_115, "house", 115)
+# house_bills_116 = "../csv_data/house_bills_116.csv"
+# house_bills_115 = "../csv_data/house_bills_115.csv"
+# senate_bills_116 = "../csv_data/senate_bills_116.csv"
+# senate_bills_115 = "../csv_data/senate_bills_115.csv"
+#
+#
+# # csve.clean_house_representative_data_csv(house_reps_116)
+# # csve.clean_house_representative_data_csv(house_reps_115)
+# #
+# # csve.clean_house_representative_data_csv(senators_116)
+# # csve.clean_house_representative_data_csv(senators_115)
+#
+#
+# # csve.clean_bills_names(house_bills_116, "house", 116)
+# # csve.clean_bills_names(house_bills_115, "house", 115)
 # csve.clean_bills_names(senate_bills_115, "senate", 115)
 # csve.clean_bills_names(senate_bills_116, "senate", 116)
 
-# csve.clean_committees_names(committees_115, 115)
-# csve.clean_committees_names(committees_116, 116)
+the_d = csve.test_dictionary_creation(house_reps_116)
 
-# csve.clean_roll_call_member(house_reps_115, house_roll_call_votes_115)
-# csve.clean_roll_call_member(house_reps_116, house_roll_call_votes_116)
+for key in the_d.keys():
+    if len(the_d[key].keys()) > 1:
+        print(the_d[key])
 
-csve.drop_nan(house_roll_call_votes_115)
-csve.drop_nan(house_roll_call_votes_116)
 
+print(the_d["Green"])
