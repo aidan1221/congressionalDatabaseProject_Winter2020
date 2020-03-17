@@ -50,7 +50,8 @@ def parse_committee_yaml_tuples(file_path, dict):
                     if k == 'title':
                         title = v
                     c = dict[committee_name][0]
-                    t = (c, name, title)
+                    s = dict[committee_name][1]
+                    t = (c, s, name, title)
                 tuple_list.append(t)
 
         return tuple_list
@@ -68,15 +69,13 @@ def map_committee_name(file_path):
     for committee in committees_list:
         key = committee["thomas_id"]
         value = committee["name"]
-        committee_name_map[key] = []
-        committee_name_map[key].append(value)
+        committee_name_map[key] = (value, "")
 
         if "subcommittees" in committee.keys():
             for subcommittee in committee["subcommittees"]:
                 k = (committee["thomas_id"] + subcommittee["thomas_id"])
-                v = committee["name"] + " - " + subcommittee["name"]
-                committee_name_map[k] = []
-                committee_name_map[k].append(v)
+                v = subcommittee["name"]
+                committee_name_map[k] = (committee["name"], v)
 
     return committee_name_map
 
@@ -89,5 +88,5 @@ committee_list_115 = parse_committee_yaml_tuples('yaml/115_committee_assignments
 committee_list_116 = parse_committee_yaml_tuples('yaml/116_committee_assignments.yaml', committee_name_map_dict)
 
 webscraper = Webscraper()
-webscraper.csv_from_tuple_list('115_committee_membership.csv', committee_list_115, ['Committee', 'Name', 'Title'])
-webscraper.csv_from_tuple_list('116_committee_membership.csv', committee_list_116, ['Committee', 'Name', 'Title'])
+webscraper.csv_from_tuple_list('115_committee_membership.csv', committee_list_115, ['Committee', 'Subcommittee', 'Name', 'Title'])
+webscraper.csv_from_tuple_list('116_committee_membership.csv', committee_list_116, ['Committee', 'Subcommittee', 'Name', 'Title'])
